@@ -13,11 +13,9 @@ export default function OndeComprarPage() {
       </div>
       <Navbar />
       <main 
-        className="flex-1 bg-cover bg-center bg-no-repeat md:bg-fixed"
+        className="flex-1 bg-cover bg-center bg-no-repeat bg-fixed"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${backgroundImage}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${backgroundImage}')`
         }}
       >
         <section className="relative py-16 md:py-24">
