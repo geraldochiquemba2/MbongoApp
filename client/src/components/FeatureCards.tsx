@@ -44,6 +44,12 @@ const features = [
 ];
 
 export default function FeatureCards() {
+  const handleClick = (href: string) => {
+    if (!href.startsWith('#')) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section 
       className="py-16 md:py-24 relative bg-cover bg-center bg-no-repeat"
@@ -84,7 +90,7 @@ export default function FeatureCards() {
                     <CardDescription className="text-base mb-4 leading-relaxed text-white">
                       {feature.description}
                     </CardDescription>
-                    <Link href={feature.href}>
+                    <Link href={feature.href} onClick={() => handleClick(feature.href)}>
                       <Button 
                         variant="ghost" 
                         className="text-white hover:text-white p-0 h-auto font-medium"
