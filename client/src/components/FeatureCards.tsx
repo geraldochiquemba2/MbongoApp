@@ -76,16 +76,16 @@ export default function FeatureCards() {
                       <Icon className={`h-6 w-6 ${feature.color}`} />
                     </div>
                     <div className="flex-1">
-                      <CardTitle className="text-xl font-heading">{feature.title}</CardTitle>
+                      <CardTitle className="text-xl font-heading text-white">{feature.title}</CardTitle>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-base mb-4 leading-relaxed">
+                    <CardDescription className="text-base mb-4 leading-relaxed text-white">
                       {feature.description}
                     </CardDescription>
                     <Button 
                       variant="ghost" 
-                      className="text-primary hover:text-primary p-0 h-auto font-medium"
+                      className="text-white hover:text-white p-0 h-auto font-medium"
                       data-testid={`button-feature-${index}`}
                     >
                       {feature.action} →
