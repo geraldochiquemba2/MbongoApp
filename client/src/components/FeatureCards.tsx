@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, TrendingUp, Calculator, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import backgroundImage from "@assets/Gemini_Generated_Image_y6zw1hy6zw1hy6zw_1760443671783.png";
 
 const features = [
   {
@@ -43,8 +44,14 @@ const features = [
 
 export default function FeatureCards() {
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section 
+      className="py-16 md:py-24 relative bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url(${backgroundImage})`
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background/95"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
           <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
             Como o Mbongo pode ajudá-lo
