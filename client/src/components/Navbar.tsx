@@ -13,6 +13,7 @@ export default function Navbar() {
     { path: "/aprender", label: "Aprender" },
     { path: "/produtos", label: "Produtos" },
     { path: "/simular", label: "Simular" },
+    { path: "/onde-comprar", label: "Onde Comprar" },
     { path: "/noticias", label: "Notícias" },
   ];
 
