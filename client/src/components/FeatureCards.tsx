@@ -54,15 +54,18 @@ export default function FeatureCards() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-12">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <Card 
-                key={index} 
-                className="hover-elevate transition-all duration-300 border-card-border"
-                data-testid={`card-feature-${index}`}
-              >
+              <div key={index} className="relative" style={{ paddingBottom: '40px' }}>
+                <Card 
+                  className="hover-elevate transition-all duration-300 border-card-border relative"
+                  data-testid={`card-feature-${index}`}
+                  style={{
+                    WebkitBoxReflect: 'below 2px linear-gradient(transparent, transparent 40%, rgba(0, 0, 0, 0.3))'
+                  }}
+                >
                 <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
                   <div className={`p-3 rounded-xl ${feature.bgColor}`}>
                     <Icon className={`h-6 w-6 ${feature.color}`} />
@@ -84,6 +87,7 @@ export default function FeatureCards() {
                   </Button>
                 </CardContent>
               </Card>
+              </div>
             );
           })}
         </div>
