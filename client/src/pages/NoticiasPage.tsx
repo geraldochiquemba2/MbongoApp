@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -9,16 +9,29 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Newspaper, Search, TrendingUp, Clock, ExternalLink } from "lucide-react";
+import { Newspaper, Search, TrendingUp, Clock, ExternalLink, RefreshCw } from "lucide-react";
 import type { NewsArticle } from "@shared/schema";
 
 export default function NoticiasPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  const { data: news = [], isLoading } = useQuery<NewsArticle[]>({
+  const { data: news = [], isLoading, refetch, isFetching } = useQuery<NewsArticle[]>({
     queryKey: ["/api/news"],
+    refetchInterval: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
   });
+
+  useEffect(() => {
+    if (news && news.length > 0) {
+      setLastUpdate(new Date());
+    }
+  }, [news]);
+
+  const handleManualRefresh = async () => {
+    await refetch();
+  };
 
   const categories = [
     "all",
@@ -70,31 +83,59 @@ export default function NoticiasPage() {
 
         <section className="py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row gap-4 mb-8">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="Pesquisar notícias..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-background/95 backdrop-blur-sm"
-                  data-testid="input-search-news"
-                />
-              </div>
-              <div className="flex gap-2 overflow-x-auto pb-2">
-                {categories.map((category) => (
+            <div className="flex flex-col gap-4 mb-8">
+              <div className="flex items-center justify-between gap-4 flex-wrap">
+                <div className="flex items-center gap-3">
                   <Button
-                    key={category}
-                    variant={selectedCategory === category ? "default" : "outline"}
+                    variant="outline"
                     size="sm"
-                    onClick={() => setSelectedCategory(category)}
-                    className="shrink-0 bg-background/95 backdrop-blur-sm"
-                    data-testid={`button-category-${category}`}
+                    onClick={handleManualRefresh}
+                    disabled={isFetching}
+                    className="bg-background/95 backdrop-blur-sm"
+                    data-testid="button-refresh-news"
                   >
-                    {category === "all" ? "Todas" : category}
+                    <RefreshCw className={`h-4 w-4 mr-2 ${isFetching ? "animate-spin" : ""}`} />
+                    Atualizar
                   </Button>
-                ))}
+                  <span className="text-sm text-white/80" data-testid="text-last-update">
+                    Última atualização: <span data-testid="text-last-update-time">{format(lastUpdate, "HH:mm:ss")}</span>
+                  </span>
+                </div>
+                <Badge 
+                  variant="outline" 
+                  className="text-xs bg-background/95 backdrop-blur-sm"
+                  data-testid="badge-auto-refresh-info"
+                >
+                  Atualização automática a cada 5 minutos
+                </Badge>
+              </div>
+              
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Pesquisar notícias..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 bg-background/95 backdrop-blur-sm"
+                    data-testid="input-search-news"
+                  />
+                </div>
+                <div className="flex gap-2 overflow-x-auto pb-2">
+                  {categories.map((category) => (
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedCategory(category)}
+                      className="shrink-0 bg-background/95 backdrop-blur-sm"
+                      data-testid={`button-category-${category}`}
+                    >
+                      {category === "all" ? "Todas" : category}
+                    </Button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -128,20 +169,20 @@ export default function NoticiasPage() {
                       <CardContent className="p-5">
                         <div className="flex items-center gap-2 mb-3 text-sm text-muted-foreground">
                           <Clock className="h-4 w-4" />
-                          <span>
+                          <span data-testid={`text-date-important-${article.id}`}>
                             {format(new Date(article.publishedAt), "dd 'de' MMMM", {
                               locale: ptBR,
                             })}
                           </span>
                         </div>
-                        <h3 className="font-heading font-semibold mb-2 leading-tight">
+                        <h3 className="font-heading font-semibold mb-2 leading-tight" data-testid={`text-title-important-${article.id}`}>
                           {article.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                        <p className="text-sm text-muted-foreground mb-3 line-clamp-2" data-testid={`text-description-important-${article.id}`}>
                           {article.description}
                         </p>
                         <div className="flex items-center justify-between gap-2">
-                          <Badge variant="outline" className="text-xs">
+                          <Badge variant="outline" className="text-xs" data-testid={`badge-category-important-${article.id}`}>
                             {article.category}
                           </Badge>
                           <Button
@@ -226,24 +267,24 @@ export default function NoticiasPage() {
                       <div className="flex flex-wrap items-center gap-2 mb-3">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Clock className="h-4 w-4" />
-                          <span>
+                          <span data-testid={`text-date-${article.id}`}>
                             {format(new Date(article.publishedAt), "dd 'de' MMMM", {
                               locale: ptBR,
                             })}
                           </span>
                         </div>
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs" data-testid={`badge-category-${article.id}`}>
                           {article.category}
                         </Badge>
                       </div>
-                      <h3 className="font-heading font-semibold mb-2 leading-tight">
+                      <h3 className="font-heading font-semibold mb-2 leading-tight" data-testid={`text-title-${article.id}`}>
                         {article.title}
                       </h3>
-                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2" data-testid={`text-description-${article.id}`}>
                         {article.description}
                       </p>
                       <div className="flex items-center justify-between gap-2 pt-2 border-t">
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-muted-foreground" data-testid={`text-source-${article.id}`}>
                           {article.source}
                         </span>
                         <Button

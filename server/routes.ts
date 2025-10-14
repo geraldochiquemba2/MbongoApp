@@ -7,8 +7,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // News API endpoint - fetches financial news from Angola
   app.get("/api/news", async (req, res) => {
     try {
-      // TODO: Integrate with real news API (NewsAPI, Alpha Vantage, etc.)
-      // For now, returning simulated real-time financial news from Angola
+      /* 
+       * INTEGRAÇÃO COM API REAL DE NOTÍCIAS
+       * ====================================
+       * 
+       * Para obter notícias reais em tempo real, siga os passos em:
+       * docs/NEWS_API_INTEGRATION.md
+       * 
+       * Opções de APIs:
+       * 1. NewsAPI (https://newsapi.org) - Recomendado para começar
+       * 2. Alpha Vantage (https://alphavantage.co) - Notícias financeiras
+       * 3. Finage (https://finage.co.uk) - Streaming em tempo real
+       * 
+       * Exemplo de integração com NewsAPI:
+       * 
+       * const API_KEY = process.env.NEWS_API_KEY;
+       * const response = await fetch(
+       *   `https://newsapi.org/v2/everything?q=Angola+finanças&language=pt&apiKey=${API_KEY}`
+       * );
+       * const data = await response.json();
+       * const articles = data.articles.map(transformToNewsArticle);
+       * return res.json(articles);
+       * 
+       * O frontend já está configurado para:
+       * - Auto-refresh a cada 5 minutos
+       * - Refresh manual
+       * - Indicador de última atualização
+       */
+      
+      // DADOS SIMULADOS - Baseados em informação real do setor financeiro angolano
+      // Substitua este bloco pela chamada à API real
       
       const mockNews: NewsArticle[] = [
         {
