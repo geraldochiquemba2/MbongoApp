@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Send, Sparkles, Volume2, VolumeX, Loader2 } from "lucide-react";
+import { Bot, Send, Sparkles, Volume2, VolumeX } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -24,9 +24,7 @@ export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
-  const [requestedIndex, setRequestedIndex] = useState<number | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const activeAudioUrlRef = useRef<string | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const { toast } = useToast();
 
   const chatMutation = useMutation({
@@ -66,62 +64,56 @@ export default function AIAssistant() {
     chatMutation.mutate(question);
   };
 
-  const ttsMutation = useMutation({
-    mutationFn: async ({ text, index }: { text: string; index: number }) => {
-      const response = await apiRequest("POST", "/api/tts", { text });
-      return { blob: await response.blob(), index };
-    },
-    onSuccess: ({ blob, index }) => {
-      if (index !== requestedIndex) {
-        return;
-      }
-
-      if (activeAudioUrlRef.current) {
-        URL.revokeObjectURL(activeAudioUrlRef.current);
-      }
-
-      const audioUrl = URL.createObjectURL(blob);
-      activeAudioUrlRef.current = audioUrl;
-
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = audioUrl;
-        audioRef.current.play();
-        setPlayingIndex(index);
-      }
-    },
-    onError: (error) => {
+  const handlePlayAudio = (text: string, index: number) => {
+    if (playingIndex === index) {
+      window.speechSynthesis.cancel();
       setPlayingIndex(null);
-      setRequestedIndex(null);
+      return;
+    }
+
+    if (!('speechSynthesis' in window)) {
       toast({
-        title: "Erro ao gerar áudio",
-        description: error instanceof Error ? error.message : "Não foi possível reproduzir o áudio.",
+        title: "Recurso não disponível",
+        description: "Seu navegador não suporta síntese de voz.",
         variant: "destructive",
       });
-    },
-  });
+      return;
+    }
 
-  const handlePlayAudio = (text: string, index: number) => {
-    if (playingIndex === index && audioRef.current && !audioRef.current.paused) {
-      audioRef.current.pause();
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'pt-BR';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+
+    const voices = window.speechSynthesis.getVoices();
+    const portugueseVoice = voices.find(voice => 
+      voice.lang.startsWith('pt-BR') || voice.lang.startsWith('pt')
+    );
+    
+    if (portugueseVoice) {
+      utterance.voice = portugueseVoice;
+    }
+
+    utterance.onend = () => {
       setPlayingIndex(null);
-      setRequestedIndex(null);
-    } else {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      setRequestedIndex(index);
-      ttsMutation.mutate({ text, index });
-    }
-  };
+      utteranceRef.current = null;
+    };
 
-  const handleAudioEnded = () => {
-    setPlayingIndex(null);
-    setRequestedIndex(null);
-    if (activeAudioUrlRef.current) {
-      URL.revokeObjectURL(activeAudioUrlRef.current);
-      activeAudioUrlRef.current = null;
-    }
+    utterance.onerror = () => {
+      setPlayingIndex(null);
+      utteranceRef.current = null;
+      toast({
+        title: "Erro ao reproduzir áudio",
+        description: "Não foi possível reproduzir o áudio.",
+        variant: "destructive",
+      });
+    };
+
+    utteranceRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+    setPlayingIndex(index);
   };
 
   return (
@@ -194,16 +186,10 @@ export default function AIAssistant() {
                         variant="ghost"
                         size="sm"
                         onClick={() => handlePlayAudio(message.content, index)}
-                        disabled={ttsMutation.isPending && requestedIndex === index}
                         className="self-start"
                         data-testid={`button-play-audio-${index}`}
                       >
-                        {ttsMutation.isPending && requestedIndex === index ? (
-                          <>
-                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                            Gerando áudio...
-                          </>
-                        ) : playingIndex === index && audioRef.current && !audioRef.current.paused ? (
+                        {playingIndex === index ? (
                           <>
                             <VolumeX className="h-4 w-4 mr-2" />
                             Parar
@@ -263,14 +249,9 @@ export default function AIAssistant() {
         </form>
 
         <p className="text-xs text-muted-foreground text-center">
-          Powered by Groq (Llama 3.3 70B + PlayAI TTS)
+          Powered by Groq (Llama 3.3 70B) + Síntese de Voz em Português
         </p>
       </CardContent>
-      <audio
-        ref={audioRef}
-        onEnded={handleAudioEnded}
-        className="hidden"
-      />
     </Card>
   );
 }
