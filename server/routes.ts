@@ -210,6 +210,41 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
     }
   });
 
+  // Text-to-Speech endpoint using Groq PlayAI TTS
+  app.post("/api/tts", async (req, res) => {
+    try {
+      const { text } = req.body;
+
+      if (!text || typeof text !== "string") {
+        return res.status(400).json({ message: "Texto inválido" });
+      }
+
+      if (!process.env.GROQ_API_KEY) {
+        return res.status(500).json({ message: "Chave de API do Groq não configurada" });
+      }
+
+      const groq = new Groq({
+        apiKey: process.env.GROQ_API_KEY
+      });
+
+      const response = await groq.audio.speech.create({
+        model: "playai-tts",
+        voice: "Calum-PlayAI",
+        input: text,
+        response_format: "mp3"
+      });
+
+      const audioBuffer = Buffer.from(await response.arrayBuffer());
+      
+      res.setHeader('Content-Type', 'audio/mpeg');
+      res.setHeader('Content-Length', audioBuffer.length);
+      res.send(audioBuffer);
+    } catch (error) {
+      console.error("Error with Groq TTS:", error);
+      res.status(500).json({ message: "Erro ao gerar áudio" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

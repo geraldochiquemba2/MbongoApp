@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Send, Sparkles } from "lucide-react";
+import { Bot, Send, Sparkles, Volume2, VolumeX, Loader2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -23,6 +23,10 @@ const suggestedQuestions = [
 export default function AIAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [playingIndex, setPlayingIndex] = useState<number | null>(null);
+  const [requestedIndex, setRequestedIndex] = useState<number | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const activeAudioUrlRef = useRef<string | null>(null);
   const { toast } = useToast();
 
   const chatMutation = useMutation({
@@ -60,6 +64,64 @@ export default function AIAssistant() {
     if (chatMutation.isPending) return;
     setMessages((prev) => [...prev, { role: "user", content: question }]);
     chatMutation.mutate(question);
+  };
+
+  const ttsMutation = useMutation({
+    mutationFn: async ({ text, index }: { text: string; index: number }) => {
+      const response = await apiRequest("POST", "/api/tts", { text });
+      return { blob: await response.blob(), index };
+    },
+    onSuccess: ({ blob, index }) => {
+      if (index !== requestedIndex) {
+        return;
+      }
+
+      if (activeAudioUrlRef.current) {
+        URL.revokeObjectURL(activeAudioUrlRef.current);
+      }
+
+      const audioUrl = URL.createObjectURL(blob);
+      activeAudioUrlRef.current = audioUrl;
+
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = audioUrl;
+        audioRef.current.play();
+        setPlayingIndex(index);
+      }
+    },
+    onError: (error) => {
+      setPlayingIndex(null);
+      setRequestedIndex(null);
+      toast({
+        title: "Erro ao gerar áudio",
+        description: error instanceof Error ? error.message : "Não foi possível reproduzir o áudio.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handlePlayAudio = (text: string, index: number) => {
+    if (playingIndex === index && audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
+      setPlayingIndex(null);
+      setRequestedIndex(null);
+    } else {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      setRequestedIndex(index);
+      ttsMutation.mutate({ text, index });
+    }
+  };
+
+  const handleAudioEnded = () => {
+    setPlayingIndex(null);
+    setRequestedIndex(null);
+    if (activeAudioUrlRef.current) {
+      URL.revokeObjectURL(activeAudioUrlRef.current);
+      activeAudioUrlRef.current = null;
+    }
   };
 
   return (
@@ -114,17 +176,46 @@ export default function AIAssistant() {
                       <Bot className="h-4 w-4 text-primary" />
                     </div>
                   )}
-                  <div
-                    className={`rounded-lg px-4 py-3 max-w-[80%] ${
-                      message.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-accent"
-                    }`}
-                    data-testid={`message-${message.role}-${index}`}
-                  >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                      {message.content}
-                    </p>
+                  <div className="flex flex-col gap-2 max-w-[80%]">
+                    <div
+                      className={`rounded-lg px-4 py-3 ${
+                        message.role === "user"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-accent"
+                      }`}
+                      data-testid={`message-${message.role}-${index}`}
+                    >
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {message.content}
+                      </p>
+                    </div>
+                    {message.role === "assistant" && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handlePlayAudio(message.content, index)}
+                        disabled={ttsMutation.isPending && requestedIndex === index}
+                        className="self-start"
+                        data-testid={`button-play-audio-${index}`}
+                      >
+                        {ttsMutation.isPending && requestedIndex === index ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Gerando áudio...
+                          </>
+                        ) : playingIndex === index && audioRef.current && !audioRef.current.paused ? (
+                          <>
+                            <VolumeX className="h-4 w-4 mr-2" />
+                            Parar
+                          </>
+                        ) : (
+                          <>
+                            <Volume2 className="h-4 w-4 mr-2" />
+                            Ouvir resposta
+                          </>
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </div>
               ))}
@@ -172,9 +263,14 @@ export default function AIAssistant() {
         </form>
 
         <p className="text-xs text-muted-foreground text-center">
-          Powered by Groq (Llama 3.3 70B)
+          Powered by Groq (Llama 3.3 70B + PlayAI TTS)
         </p>
       </CardContent>
+      <audio
+        ref={audioRef}
+        onEnded={handleAudioEnded}
+        className="hidden"
+      />
     </Card>
   );
 }
