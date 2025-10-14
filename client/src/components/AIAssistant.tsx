@@ -25,6 +25,7 @@ export default function AIAssistant() {
   const [input, setInput] = useState("");
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const { toast } = useToast();
 
   const chatMutation = useMutation({
@@ -64,6 +65,33 @@ export default function AIAssistant() {
     chatMutation.mutate(question);
   };
 
+  const getPortugueseVoice = () => {
+    if (selectedVoiceRef.current) {
+      return selectedVoiceRef.current;
+    }
+
+    const voices = window.speechSynthesis.getVoices();
+    
+    const ptBRVoice = voices.find(voice => voice.lang === 'pt-BR');
+    if (ptBRVoice) {
+      selectedVoiceRef.current = ptBRVoice;
+      return ptBRVoice;
+    }
+
+    const ptVoice = voices.find(voice => voice.lang.startsWith('pt'));
+    if (ptVoice) {
+      selectedVoiceRef.current = ptVoice;
+      return ptVoice;
+    }
+
+    if (voices.length > 0) {
+      selectedVoiceRef.current = voices[0];
+      return voices[0];
+    }
+
+    return null;
+  };
+
   const handlePlayAudio = (text: string, index: number) => {
     if (playingIndex === index) {
       window.speechSynthesis.cancel();
@@ -80,40 +108,47 @@ export default function AIAssistant() {
       return;
     }
 
-    window.speechSynthesis.cancel();
+    const loadVoicesAndSpeak = () => {
+      window.speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'pt-BR';
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = 'pt-BR';
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+
+      const voice = getPortugueseVoice();
+      if (voice) {
+        utterance.voice = voice;
+      }
+
+      utterance.onend = () => {
+        setPlayingIndex(null);
+        utteranceRef.current = null;
+      };
+
+      utterance.onerror = () => {
+        setPlayingIndex(null);
+        utteranceRef.current = null;
+        toast({
+          title: "Erro ao reproduzir áudio",
+          description: "Não foi possível reproduzir o áudio.",
+          variant: "destructive",
+        });
+      };
+
+      utteranceRef.current = utterance;
+      window.speechSynthesis.speak(utterance);
+      setPlayingIndex(index);
+    };
 
     const voices = window.speechSynthesis.getVoices();
-    const portugueseVoice = voices.find(voice => 
-      voice.lang.startsWith('pt-BR') || voice.lang.startsWith('pt')
-    );
-    
-    if (portugueseVoice) {
-      utterance.voice = portugueseVoice;
+    if (voices.length === 0) {
+      window.speechSynthesis.addEventListener('voiceschanged', () => {
+        loadVoicesAndSpeak();
+      }, { once: true });
+    } else {
+      loadVoicesAndSpeak();
     }
-
-    utterance.onend = () => {
-      setPlayingIndex(null);
-      utteranceRef.current = null;
-    };
-
-    utterance.onerror = () => {
-      setPlayingIndex(null);
-      utteranceRef.current = null;
-      toast({
-        title: "Erro ao reproduzir áudio",
-        description: "Não foi possível reproduzir o áudio.",
-        variant: "destructive",
-      });
-    };
-
-    utteranceRef.current = utterance;
-    window.speechSynthesis.speak(utterance);
-    setPlayingIndex(index);
   };
 
   return (
