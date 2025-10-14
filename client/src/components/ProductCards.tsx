@@ -19,8 +19,20 @@ const bonds = [
 
 export default function ProductCards() {
   return (
-    <section className="py-16 md:py-24 bg-accent/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 md:py-24 relative overflow-hidden">
+      {/* Video Background */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none">
+        <iframe
+          className="absolute top-1/2 left-1/2 w-[300%] h-[300%] -translate-x-1/2 -translate-y-1/2"
+          src="https://www.youtube.com/embed/8ljGmIakBWM?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&autohide=1&modestbranding=1&vq=hd1080&playlist=8ljGmIakBWM&playsinline=1&disablekb=1&fs=0&rel=0"
+          title="Background video"
+          frameBorder="0"
+          allow="autoplay; encrypted-media"
+        />
+      </div>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/50 to-background/40"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
           <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
             Produtos Disponíveis no Mercado
