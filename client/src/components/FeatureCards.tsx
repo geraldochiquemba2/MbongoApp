@@ -68,7 +68,7 @@ export default function FeatureCards() {
               return (
                 <Card 
                   key={index}
-                  className="hover-elevate transition-all duration-300 border-card-border relative bg-transparent backdrop-blur-sm"
+                  className="hover-elevate transition-all duration-300 border-2 border-white/30 relative bg-transparent backdrop-blur-sm"
                   data-testid={`card-feature-${index}`}
                 >
                   <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
