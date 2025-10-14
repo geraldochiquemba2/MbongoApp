@@ -9,7 +9,7 @@ const brokers = [
     phone: "+244 222 638 900",
     email: "investimentos@bancobai.ao",
     address: "Luanda, Talatona",
-    url: "https://www.bancobai.ao/pt/particulares/investir"
+    url: "https://www.bancobai.ao/pt/particulares/produtos/investimento"
   },
   {
     name: "Banco BIC",
@@ -17,7 +17,7 @@ const brokers = [
     phone: "+244 226 430 100",
     email: "mercados@bancobic.ao",
     address: "Luanda, Maianga",
-    url: "https://www.bancobic.ao/pt/investimentos"
+    url: "https://www.bancobic.ao"
   },
   {
     name: "Banco Atlântico",
@@ -25,7 +25,7 @@ const brokers = [
     phone: "+244 222 639 000",
     email: "investimentos@atlantico.ao",
     address: "Luanda, Marginal",
-    url: "https://www.atlantico.ao/investimentos"
+    url: "https://www.atlantico.ao/pt/investimentos-e-poupanca/aprender-a-investir/como-investir"
   },
   {
     name: "Banco Económico",
@@ -33,7 +33,7 @@ const brokers = [
     phone: "+244 222 676 700",
     email: "mercados@be.co.ao",
     address: "Luanda, Maculusso",
-    url: "https://www.be.co.ao/investir"
+    url: "https://www.be.co.ao"
   },
   {
     name: "Banco Sol",
@@ -41,7 +41,7 @@ const brokers = [
     phone: "+244 222 638 600",
     email: "investimentos@bancosol.ao",
     address: "Luanda, Ingombota",
-    url: "https://www.bancosol.ao/pt/investimentos"
+    url: "https://www.bancosol.ao"
   },
   {
     name: "Standard Bank Angola",
@@ -49,15 +49,15 @@ const brokers = [
     phone: "+244 222 638 800",
     email: "trading@standardbank.co.ao",
     address: "Luanda, Kinaxixi",
-    url: "https://www.standardbank.co.ao/investimentos"
+    url: "https://www.standardbank.co.ao/angola/pt/Grandes-Empresas/Mercado-de-Capitais"
   },
   {
-    name: "Finibanco Angola",
+    name: "Access Bank Angola",
     type: "Banco de Investimento",
     phone: "+244 222 700 300",
-    email: "trading@finibanco.ao",
+    email: "info@angola.accessbankplc.com",
     address: "Luanda, Ilha",
-    url: "https://www.finibanco.ao/mercados"
+    url: "https://angola.accessbankplc.com"
   },
   {
     name: "Banco Prestígio",
@@ -65,23 +65,23 @@ const brokers = [
     phone: "+244 222 642 000",
     email: "investir@bancoprestigio.ao",
     address: "Luanda, Talatona",
-    url: "https://www.bancoprestigio.ao/investimentos"
+    url: "https://www.bancoprestigio.ao"
   },
   {
-    name: "Ango Securities",
-    type: "Sociedade Corretora",
-    phone: "+244 222 123 456",
-    email: "info@angosecurities.ao",
-    address: "Luanda, Miramar",
-    url: "https://www.angosecurities.ao/acoes"
-  },
-  {
-    name: "VTB África",
+    name: "BFA - Banco de Fomento Angola",
     type: "Banco Comercial",
-    phone: "+244 222 640 400",
-    email: "investimentos@vtb.ao",
-    address: "Luanda, Miramar",
-    url: "https://www.vtb.ao/pt/investir"
+    phone: "+244 222 638 500",
+    email: "investimentos@bfa.ao",
+    address: "Luanda, Ingombota",
+    url: "https://www.bfa.ao"
+  },
+  {
+    name: "Banco Comercial Angolano",
+    type: "Banco Comercial",
+    phone: "+244 222 397 700",
+    email: "geral@bca.ao",
+    address: "Luanda, Maianga",
+    url: "https://www.bca.ao"
   }
 ];
 
