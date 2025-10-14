@@ -33,17 +33,7 @@ export default function Hero() {
             Aprenda a investir na BODIVA com guias simples, calculadoras inteligentes e informação atualizada sobre Títulos do Tesouro, Ações e Fundos.
           </p>
           
-          <div className="flex flex-wrap gap-4">
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20"
-              data-testid="button-hero-produtos"
-            >
-              <TrendingUp className="w-5 h-5 mr-2" />
-              Ver Produtos
-            </Button>
-          </div>
+          
         </div>
       </div>
     </section>
