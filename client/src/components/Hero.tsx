@@ -36,14 +36,6 @@ export default function Hero() {
           <div className="flex flex-wrap gap-4">
             <Button 
               size="lg" 
-              className="bg-white text-primary hover:bg-white/90 border-white/20 border"
-              data-testid="button-hero-comecar"
-            >
-              <BookOpen className="w-5 h-5 mr-2" />
-              Começar Agora
-            </Button>
-            <Button 
-              size="lg" 
               variant="outline" 
               className="bg-white/10 backdrop-blur-sm text-white border-white/30 hover:bg-white/20"
               data-testid="button-hero-produtos"
