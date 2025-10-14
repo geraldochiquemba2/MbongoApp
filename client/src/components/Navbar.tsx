@@ -16,11 +16,15 @@ export default function Navbar() {
     { path: "/noticias", label: "Notícias" },
   ];
 
+  const handleNavClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 gap-4">
-          <Link href="/" className="flex items-center gap-3 hover-elevate rounded-md px-2 py-1 -ml-2">
+          <Link href="/" className="flex items-center gap-3 hover-elevate rounded-md px-2 py-1 -ml-2" onClick={handleNavClick}>
             <img src={logoPath} alt="Mbongo" className="h-8" />
           </Link>
 
@@ -33,6 +37,7 @@ export default function Navbar() {
                 className={`text-sm font-medium transition-colors hover:text-primary ${
                   location === item.path ? "text-primary" : "text-foreground"
                 }`}
+                onClick={handleNavClick}
                 data-testid={`link-nav-${item.label.toLowerCase()}`}
               >
                 {item.label}
@@ -68,7 +73,10 @@ export default function Navbar() {
                     ? "bg-primary/10 text-primary"
                     : "text-foreground hover:bg-accent"
                 }`}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleNavClick();
+                }}
                 data-testid={`link-mobile-${item.label.toLowerCase()}`}
               >
                 {item.label}
