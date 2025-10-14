@@ -19,7 +19,7 @@ const bonds = [
 
 export default function ProductCards() {
   return (
-    <section className="relative">
+    <section id="produtos" className="relative">
       {/* Video Background - Fixed */}
       <div className="sticky top-0 h-screen w-full overflow-hidden z-0">
         <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">

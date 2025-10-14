@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, TrendingUp, Calculator, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 import backgroundImage from "@assets/Gemini_Generated_Image_fuqquwfuqquwfuqq_1760444548490.png";
 
 const features = [
@@ -18,7 +19,7 @@ const features = [
     title: "Ver os Produtos Disponíveis",
     description: "Títulos do Tesouro, Ações da BODIVA, páginas de empresas e radar de IPOs com informação atualizada.",
     action: "Ver Produtos",
-    href: "/produtos",
+    href: "#produtos",
     color: "text-chart-2",
     bgColor: "bg-chart-2/10"
   },
@@ -36,7 +37,7 @@ const features = [
     title: "Conectar e Comprar",
     description: "Lista de bancos e corretoras autorizadas, cotações do dia e conexão direta com intermediários.",
     action: "Ver Intermediários",
-    href: "/conectar",
+    href: "/onde-comprar",
     color: "text-primary",
     bgColor: "bg-primary/10"
   }
@@ -83,13 +84,15 @@ export default function FeatureCards() {
                     <CardDescription className="text-base mb-4 leading-relaxed text-white">
                       {feature.description}
                     </CardDescription>
-                    <Button 
-                      variant="ghost" 
-                      className="text-white hover:text-white p-0 h-auto font-medium"
-                      data-testid={`button-feature-${index}`}
-                    >
-                      {feature.action} →
-                    </Button>
+                    <Link href={feature.href}>
+                      <Button 
+                        variant="ghost" 
+                        className="text-white hover:text-white p-0 h-auto font-medium"
+                        data-testid={`button-feature-${index}`}
+                      >
+                        {feature.action} →
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               );
