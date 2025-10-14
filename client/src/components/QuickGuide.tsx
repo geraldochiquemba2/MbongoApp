@@ -70,10 +70,10 @@ export default function QuickGuide() {
                   <div className="mt-4 mb-4 flex items-center justify-center p-2 bg-primary/10 rounded-xl">
                     <Icon className="h-4 w-4 text-primary" />
                   </div>
-                  <h3 className="font-heading font-semibold mb-2 text-base">
+                  <h3 className="font-heading font-semibold mb-2 text-base text-white">
                     {step.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
+                  <p className="text-sm leading-relaxed text-white">
                     {step.description}
                   </p>
                 </CardContent>
