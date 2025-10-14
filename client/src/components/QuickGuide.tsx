@@ -60,7 +60,7 @@ export default function QuickGuide() {
             return (
               <Card 
                 key={index} 
-                className="relative hover-elevate transition-all duration-300 border-card-border"
+                className="relative hover-elevate transition-all duration-300 bg-transparent backdrop-blur-sm border-2 border-white/30"
                 data-testid={`card-step-${index}`}
               >
                 <CardContent className="p-6 text-center">
