@@ -63,12 +63,12 @@ export default function QuickGuide() {
                 className="relative hover-elevate transition-all duration-300 bg-transparent backdrop-blur-sm border-2 border-white/30"
                 data-testid={`card-step-${index}`}
               >
-                <CardContent className="p-6 text-center">
+                <CardContent className="p-6 text-center flex flex-col items-center">
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm">
                     {step.number}
                   </div>
-                  <div className="mt-4 mb-4 inline-flex p-3 bg-primary/10 rounded-xl">
-                    <Icon className="h-6 w-6 text-primary" />
+                  <div className="mt-4 mb-4 flex items-center justify-center p-2 bg-primary/10 rounded-xl">
+                    <Icon className="h-4 w-4 text-primary" />
                   </div>
                   <h3 className="font-heading font-semibold mb-2 text-base">
                     {step.title}
