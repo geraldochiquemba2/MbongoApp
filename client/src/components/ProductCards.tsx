@@ -23,11 +23,12 @@ export default function ProductCards() {
       {/* Video Background */}
       <div className="absolute inset-0 w-full h-full pointer-events-none">
         <iframe
-          className="absolute top-1/2 left-1/2 w-[300%] h-[300%] -translate-x-1/2 -translate-y-1/2"
+          className="absolute inset-0 w-full h-full"
           src="https://www.youtube.com/embed/8ljGmIakBWM?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&autohide=1&modestbranding=1&vq=hd1080&playlist=8ljGmIakBWM&playsinline=1&disablekb=1&fs=0&rel=0"
           title="Background video"
           frameBorder="0"
           allow="autoplay; encrypted-media"
+          style={{ objectFit: 'cover' }}
         />
       </div>
       {/* Overlay */}
