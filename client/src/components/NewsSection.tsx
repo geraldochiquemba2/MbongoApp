@@ -143,7 +143,7 @@ export default function NewsSection() {
             </div>
             
             <div className="mt-6 text-center">
-              <Link href="/noticias">
+              <Link href="/noticias" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <Button variant="outline" data-testid="button-more-news">
                   <TrendingUp className="h-4 w-4 mr-2" />
                   Ver Todas as Notícias
