@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Newspaper, Bell, TrendingUp } from "lucide-react";
+import { Link } from "wouter";
 
 //todo: remove mock functionality
 const news = [
@@ -142,10 +143,12 @@ export default function NewsSection() {
             </div>
             
             <div className="mt-6 text-center">
-              <Button variant="outline" data-testid="button-more-news">
-                <TrendingUp className="h-4 w-4 mr-2" />
-                Ver Todas as Notícias
-              </Button>
+              <Link href="/noticias">
+                <Button variant="outline" data-testid="button-more-news">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Ver Todas as Notícias
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
