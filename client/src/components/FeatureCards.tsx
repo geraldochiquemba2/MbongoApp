@@ -62,7 +62,7 @@ export default function FeatureCards() {
         </div>
 
         <div className="flex justify-end">
-          <div className="w-full md:w-1/2 flex flex-col gap-6">
+          <div className="w-full md:w-1/2 md:ml-auto md:pl-12 flex flex-col gap-6">
             {features.map((feature, index) => {
               const Icon = feature.icon;
               return (
