@@ -52,21 +52,6 @@ export default function Hero() {
               Ver Produtos
             </Button>
           </div>
-
-          <div className="mt-12 grid grid-cols-3 gap-8 max-w-2xl">
-            <div>
-              <div className="text-3xl font-bold font-heading">5+</div>
-              <div className="text-sm text-white/80">Guias Práticos</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold font-heading">15+</div>
-              <div className="text-sm text-white/80">Empresas BODIVA</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold font-heading">100%</div>
-              <div className="text-sm text-white/80">Gratuito</div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

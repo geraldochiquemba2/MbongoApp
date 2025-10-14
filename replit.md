@@ -1,0 +1,113 @@
+# Mbongo Investment Platform
+
+## Overview
+
+Mbongo is an educational investment platform designed specifically for the Angolan market (BODIVA - Bolsa de Dívida e Valores de Angola). The platform serves as a financial literacy tool that helps users learn about investing, simulate investment scenarios, discover authorized intermediaries, and stay updated with market news. It bridges the gap between novice investors and the Angolan capital markets by providing accessible educational content, interactive calculators, and practical guidance in Portuguese.
+
+The application targets Angolan investors who want to understand and participate in local investment opportunities including Treasury Bonds (Títulos do Tesouro), stocks traded on BODIVA, and investment funds.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend Architecture
+
+**Framework & Rendering**: React 18+ with client-side rendering using Vite as the build tool and development server. The application uses wouter for lightweight client-side routing.
+
+**UI Component System**: shadcn/ui component library built on Radix UI primitives with Tailwind CSS for styling. The design follows a "New York" style variant with extensive use of HSL-based color variables for theming. Custom color palette implements a blue-focused brand identity (Mbongo Primary Blue: 215 85% 45%) with support for both light and dark modes, though dark mode is currently enforced.
+
+**State Management**: TanStack Query (React Query) handles server state with configured defaults for reduced refetching. No global client state management library is used - component-level state with React hooks is preferred.
+
+**Typography & Design**: Custom font stack using Inter (primary) and Plus Jakarta Sans (headings) loaded from Google Fonts. The design system references fintech platforms (Nubank/Revolut) and trading platforms for professional credibility while maintaining educational accessibility.
+
+**Page Structure**: Multi-page application with distinct routes for Home, Learn (Aprender), Simulate (Simular), Where to Buy (Onde Comprar), and News (Notícias). Each page includes a sticky navbar, themed content sections with background imagery/video, and shared footer.
+
+### Backend Architecture
+
+**Runtime & Framework**: Node.js with Express.js server running on ESM modules. Development uses tsx for TypeScript execution, production uses esbuild for bundling.
+
+**API Design**: RESTful API endpoints mounted under `/api` prefix. Currently implements a minimal API surface focused on news retrieval. The architecture supports future expansion with the `registerRoutes` pattern.
+
+**Development Environment**: Custom Vite integration in development mode with HMR (Hot Module Replacement) through middleware mode. Replit-specific plugins provide runtime error overlays and development banners.
+
+**Data Layer Pattern**: Abstract storage interface (`IStorage`) currently implemented with in-memory storage (`MemStorage`). Designed to be swapped with database-backed implementations without changing business logic.
+
+### Database & ORM
+
+**ORM**: Drizzle ORM configured for PostgreSQL with schema-first approach. Schema definitions use Drizzle's type-safe table builders and integrate with Zod for runtime validation.
+
+**Database Provider**: Configured for Neon serverless PostgreSQL (@neondatabase/serverless driver). Connection string expected via `DATABASE_URL` environment variable.
+
+**Schema Design**: 
+- Users table with UUID primary keys, username/password authentication fields
+- News articles table with rich metadata (title, description, content, source, category, publication date, image URL, importance flag)
+- Uses `createInsertSchema` from drizzle-zod for type-safe insert operations
+
+**Migration Strategy**: Drizzle Kit manages migrations with schema stored in `/shared/schema.ts` and migration files output to `/migrations` directory.
+
+### Data Patterns
+
+**Mock Data Architecture**: The application currently operates with simulated data that mirrors real Angolan financial market information. Mock data includes:
+- Treasury bonds (BT/OT) with realistic rates and minimum investments
+- BODIVA-listed stocks with price movements and sectors
+- Financial news based on actual market events
+- Broker/intermediary information from authorized institutions
+
+**Real-time Updates**: News section implements auto-refresh (5-minute intervals) and manual refresh capabilities with last-update timestamps. Architecture prepared for WebSocket or streaming integration when connecting to real APIs.
+
+### Architectural Decisions
+
+**Monorepo Structure**: Single repository with clear separation:
+- `/client` - Frontend React application
+- `/server` - Backend Express server
+- `/shared` - Shared TypeScript types and schemas accessible to both layers
+- Path aliases configured in both tsconfig and Vite for clean imports
+
+**Type Safety**: End-to-end TypeScript with strict mode enabled. Shared schema definitions ensure type consistency between client and server. Drizzle-Zod integration provides runtime validation matching compile-time types.
+
+**Build Strategy**: Separate build processes for client (Vite) and server (esbuild). Client builds to `/dist/public`, server bundles to `/dist`. Production serves static files from built client and runs bundled server.
+
+**Session Management**: Infrastructure present for session-based authentication using connect-pg-simple for PostgreSQL-backed sessions, though not actively implemented in current routes.
+
+**Educational vs Transactional**: Architectural decision to remain an educational/informational platform rather than executing actual trades. Connects users to authorized intermediaries (banks/brokers) for actual transactions.
+
+## External Dependencies
+
+### Third-Party Services
+
+**News Integration (Planned)**: Documentation exists for integrating external news APIs including:
+- NewsAPI for general financial news filtering by Angola/Portuguese content
+- Alpha Vantage for financial market news with sentiment analysis
+- Finage for real-time streaming financial news
+
+Current implementation uses mock data that mirrors real Angolan financial news, designed to be swapped for API calls when integrated.
+
+**Font Delivery**: Google Fonts CDN for Inter and Plus Jakarta Sans typefaces.
+
+**Video Content**: YouTube embedded videos for background elements on Hero and Product sections (autoplay, muted, looped).
+
+### Database & Infrastructure
+
+**PostgreSQL Database**: Neon serverless PostgreSQL expected to be provisioned and connected via DATABASE_URL environment variable. Drizzle ORM provides the abstraction layer.
+
+**Development Tools**: Replit-specific tooling including vite-plugin-runtime-error-modal, vite-plugin-cartographer, and vite-plugin-dev-banner for enhanced development experience.
+
+### External Market Data (Future)
+
+**Regulatory Bodies**: Platform references official data from:
+- CMC (Comissão do Mercado de Capitais) - Market regulator
+- BNA (Banco Nacional de Angola) - Central bank monetary policy
+- BODIVA - Stock exchange market data
+
+**Broker Integration**: Lists authorized intermediaries (commercial banks and investment firms) with contact information. No direct API integration - serves as directory for users to contact brokers directly.
+
+### API Client Architecture
+
+**HTTP Client**: Native fetch API wrapped in custom `apiRequest` utility with automatic error handling and JSON content-type headers. Credentials included for session-based authentication.
+
+**Query Configuration**: TanStack Query configured with:
+- Custom query function that handles 401 responses based on context
+- Disabled automatic refetching by default (staleTime: Infinity)
+- Specific components opt-in to refetch intervals (e.g., news every 5 minutes)
