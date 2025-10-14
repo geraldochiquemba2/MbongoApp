@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import type { NewsArticle } from "@shared/schema";
+import Groq from "groq-sdk";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // News API endpoint - fetches financial news from Angola
@@ -146,6 +147,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching news:", error);
       res.status(500).json({ message: "Erro ao buscar notícias" });
+    }
+  });
+
+  // Groq AI Chat endpoint - assistente de aprendizagem sobre investimentos
+  app.post("/api/chat", async (req, res) => {
+    try {
+      const { message } = req.body;
+
+      if (!message || typeof message !== "string") {
+        return res.status(400).json({ message: "Mensagem inválida" });
+      }
+
+      if (!process.env.GROQ_API_KEY) {
+        return res.status(500).json({ message: "Chave de API do Groq não configurada" });
+      }
+
+      const groq = new Groq({
+        apiKey: process.env.GROQ_API_KEY
+      });
+
+      const systemPrompt = `Você é um assistente educativo especializado em investimentos no mercado financeiro angolano. Seu objetivo é ajudar os usuários a aprender sobre:
+
+- Títulos do Tesouro (Bilhetes do Tesouro e Obrigações do Tesouro)
+- Ações na BODIVA (Bolsa de Dívida e Valores de Angola)
+- Fundos de investimento
+- IPOs (Ofertas Públicas Iniciais)
+- Perfis de risco (conservador, moderado, arrojado)
+- Diversificação de carteira
+- Conceitos financeiros básicos
+
+Mantenha suas respostas:
+- Educativas e acessíveis para iniciantes
+- Focadas no contexto angolano
+- Claras e objetivas (máximo 300 palavras)
+- Em português de Angola
+
+Não dê conselhos financeiros específicos ou recomendações de compra/venda. Apenas eduque.`;
+
+      const chatCompletion = await groq.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: systemPrompt
+          },
+          {
+            role: "user",
+            content: message
+          }
+        ],
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.7,
+        max_tokens: 1024,
+      });
+
+      const reply = chatCompletion.choices[0]?.message?.content || "Desculpe, não consegui processar a sua pergunta.";
+
+      res.json({ reply });
+    } catch (error) {
+      console.error("Error with Groq API:", error);
+      res.status(500).json({ message: "Erro ao processar a sua pergunta" });
     }
   });
 

@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RiskQuiz from "@/components/RiskQuiz";
+import AIAssistant from "@/components/AIAssistant";
 import ThemeToggle from "@/components/ThemeToggle";
 import { GraduationCap } from "lucide-react";
 
@@ -30,6 +31,20 @@ export default function LearnPage() {
                 Descubra o seu perfil de investidor e aprenda sobre os produtos disponíveis
               </p>
             </div>
+          </div>
+        </section>
+
+        <section className="py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="font-heading text-3xl font-bold mb-4 text-white">
+                Assistente IA de Investimentos
+              </h2>
+              <p className="text-white/90">
+                Faça perguntas sobre investimentos e receba respostas personalizadas
+              </p>
+            </div>
+            <AIAssistant />
           </div>
         </section>
 
