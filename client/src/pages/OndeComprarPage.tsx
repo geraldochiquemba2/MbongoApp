@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import BrokerDirectory from "@/components/BrokerDirectory";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Building2 } from "lucide-react";
+import backgroundImage from "@assets/img_onde_comprar_localizador_1760483871920.jpg";
 
 export default function OndeComprarPage() {
   return (
@@ -14,7 +15,7 @@ export default function OndeComprarPage() {
       <main 
         className="flex-1 bg-cover bg-center bg-no-repeat bg-fixed"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://clamper.com.br/wp-content/themes/clamper/assets/img/img_onde_comprar_localizador.jpg')`
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('${backgroundImage}')`
         }}
       >
         <section className="relative py-16 md:py-24">
