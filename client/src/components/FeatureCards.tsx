@@ -61,42 +61,40 @@ export default function FeatureCards() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <div key={index} className="relative" style={{ paddingBottom: '40px' }}>
+        <div className="flex justify-end">
+          <div className="w-full md:w-1/2 flex flex-col gap-6">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
                 <Card 
+                  key={index}
                   className="hover-elevate transition-all duration-300 border-card-border relative bg-transparent backdrop-blur-sm"
                   data-testid={`card-feature-${index}`}
-                  style={{
-                    WebkitBoxReflect: 'below 2px linear-gradient(transparent, transparent 40%, rgba(0, 0, 0, 0.3))'
-                  }}
                 >
-                <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
-                  <div className={`p-3 rounded-xl ${feature.bgColor}`}>
-                    <Icon className={`h-6 w-6 ${feature.color}`} />
-                  </div>
-                  <div className="flex-1">
-                    <CardTitle className="text-xl font-heading">{feature.title}</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base mb-4 leading-relaxed">
-                    {feature.description}
-                  </CardDescription>
-                  <Button 
-                    variant="ghost" 
-                    className="text-primary hover:text-primary p-0 h-auto font-medium"
-                    data-testid={`button-feature-${index}`}
-                  >
-                    {feature.action} →
-                  </Button>
-                </CardContent>
-              </Card>
-              </div>
-            );
-          })}
+                  <CardHeader className="flex flex-row items-start gap-4 space-y-0 pb-4">
+                    <div className={`p-3 rounded-xl ${feature.bgColor}`}>
+                      <Icon className={`h-6 w-6 ${feature.color}`} />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-xl font-heading">{feature.title}</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-base mb-4 leading-relaxed">
+                      {feature.description}
+                    </CardDescription>
+                    <Button 
+                      variant="ghost" 
+                      className="text-primary hover:text-primary p-0 h-auto font-medium"
+                      data-testid={`button-feature-${index}`}
+                    >
+                      {feature.action} →
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
