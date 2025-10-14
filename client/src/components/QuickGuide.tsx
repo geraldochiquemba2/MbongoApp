@@ -54,7 +54,7 @@ export default function QuickGuide() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-5 gap-6">
+        <div className="grid md:grid-cols-5 gap-3">
           {steps.map((step, index) => {
             const Icon = step.icon;
             return (
