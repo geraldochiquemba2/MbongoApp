@@ -102,7 +102,7 @@ export default function BrokerDirectory() {
           {brokers.map((broker, index) => (
             <Card 
               key={index} 
-              className="hover-elevate transition-all duration-200"
+              className="bg-transparent backdrop-blur-sm hover-elevate transition-all duration-200"
               data-testid={`card-broker-${index}`}
             >
               <CardHeader>
