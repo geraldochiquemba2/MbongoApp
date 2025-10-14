@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { UserCheck, Search, Calculator, FileText, TrendingUp } from "lucide-react";
+import backgroundImage from "@assets/Gemini_Generated_Image_q9lsxaq9lsxaq9ls_1760448018416.png";
 
 const steps = [
   {
@@ -36,8 +37,14 @@ const steps = [
 
 export default function QuickGuide() {
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section 
+      className="py-16 md:py-24 relative bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url(${backgroundImage})`
+      }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/25 to-background/30"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12">
           <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
             Guia Rápido de 5 Passos
