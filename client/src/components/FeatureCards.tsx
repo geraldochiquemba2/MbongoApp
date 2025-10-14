@@ -67,7 +67,7 @@ export default function FeatureCards() {
             return (
               <div key={index} className="relative" style={{ paddingBottom: '40px' }}>
                 <Card 
-                  className="hover-elevate transition-all duration-300 border-card-border relative"
+                  className="hover-elevate transition-all duration-300 border-card-border relative bg-transparent backdrop-blur-sm"
                   data-testid={`card-feature-${index}`}
                   style={{
                     WebkitBoxReflect: 'below 2px linear-gradient(transparent, transparent 40%, rgba(0, 0, 0, 0.3))'
