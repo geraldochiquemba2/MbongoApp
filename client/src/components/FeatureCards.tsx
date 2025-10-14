@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GraduationCap, TrendingUp, Calculator, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import backgroundImage from "@assets/Gemini_Generated_Image_y6zw1hy6zw1hy6zw_1760444419535.png";
+import backgroundImage from "@assets/Gemini_Generated_Image_fuqquwfuqquwfuqq_1760444548490.png";
 
 const features = [
   {
