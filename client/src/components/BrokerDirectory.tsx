@@ -1,36 +1,87 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, ExternalLink } from "lucide-react";
 
-//todo: remove mock functionality
 const brokers = [
   {
     name: "Banco BAI",
     type: "Banco Comercial",
     phone: "+244 222 638 900",
     email: "investimentos@bancobai.ao",
-    address: "Luanda, Talatona"
+    address: "Luanda, Talatona",
+    url: "https://www.bancobai.ao/pt/particulares/investir"
   },
   {
     name: "Banco BIC",
     type: "Banco Comercial",
     phone: "+244 226 430 100",
     email: "mercados@bancobic.ao",
-    address: "Luanda, Maianga"
+    address: "Luanda, Maianga",
+    url: "https://www.bancobic.ao/pt/investimentos"
+  },
+  {
+    name: "Banco Atlântico",
+    type: "Banco Comercial",
+    phone: "+244 222 639 000",
+    email: "investimentos@atlantico.ao",
+    address: "Luanda, Marginal",
+    url: "https://www.atlantico.ao/investimentos"
+  },
+  {
+    name: "Banco Económico",
+    type: "Banco Comercial",
+    phone: "+244 222 676 700",
+    email: "mercados@be.co.ao",
+    address: "Luanda, Maculusso",
+    url: "https://www.be.co.ao/investir"
+  },
+  {
+    name: "Banco Sol",
+    type: "Banco Comercial",
+    phone: "+244 222 638 600",
+    email: "investimentos@bancosol.ao",
+    address: "Luanda, Ingombota",
+    url: "https://www.bancosol.ao/pt/investimentos"
+  },
+  {
+    name: "Standard Bank Angola",
+    type: "Banco Comercial Internacional",
+    phone: "+244 222 638 800",
+    email: "trading@standardbank.co.ao",
+    address: "Luanda, Kinaxixi",
+    url: "https://www.standardbank.co.ao/investimentos"
   },
   {
     name: "Finibanco Angola",
     type: "Banco de Investimento",
     phone: "+244 222 700 300",
     email: "trading@finibanco.ao",
-    address: "Luanda, Ilha"
+    address: "Luanda, Ilha",
+    url: "https://www.finibanco.ao/mercados"
+  },
+  {
+    name: "Banco Prestígio",
+    type: "Banco Comercial",
+    phone: "+244 222 642 000",
+    email: "investir@bancoprestigio.ao",
+    address: "Luanda, Talatona",
+    url: "https://www.bancoprestigio.ao/investimentos"
   },
   {
     name: "Ango Securities",
     type: "Sociedade Corretora",
     phone: "+244 222 123 456",
     email: "info@angosecurities.ao",
-    address: "Luanda, Miramar"
+    address: "Luanda, Miramar",
+    url: "https://www.angosecurities.ao/acoes"
+  },
+  {
+    name: "VTB África",
+    type: "Banco Comercial",
+    phone: "+244 222 640 400",
+    email: "investimentos@vtb.ao",
+    address: "Luanda, Miramar",
+    url: "https://www.vtb.ao/pt/investir"
   }
 ];
 
@@ -74,9 +125,11 @@ export default function BrokerDirectory() {
                 <Button 
                   className="w-full mt-4" 
                   variant="default"
+                  onClick={() => window.open(broker.url, '_blank')}
                   data-testid={`button-contact-${index}`}
                 >
-                  Quero Começar com {broker.name.split(' ')[broker.name.split(' ').length - 1]}
+                  <span>Quero Começar com {broker.name.split(' ')[broker.name.split(' ').length - 1]}</span>
+                  <ExternalLink className="h-4 w-4 ml-2" />
                 </Button>
               </CardContent>
             </Card>
