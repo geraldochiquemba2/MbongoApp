@@ -24,11 +24,21 @@ Preferred communication style: Simple, everyday language.
 
 **Page Structure**: Multi-page application with distinct routes for Home, Learn (Aprender), Simulate (Simular), Where to Buy (Onde Comprar), and News (Notícias). Each page includes a sticky navbar, themed content sections with background imagery/video, and shared footer.
 
+**AI Features**: The Learn page features an interactive AI assistant powered by Groq's Llama 3.3 70B model. Users can ask questions about investments in Portuguese and receive educational responses. The assistant includes:
+- Text-based Q&A with suggested questions
+- Text-to-Speech functionality using PlayAI TTS via Groq
+- Audio playback controls for each response
+- Race condition prevention for concurrent audio requests
+
 ### Backend Architecture
 
 **Runtime & Framework**: Node.js with Express.js server running on ESM modules. Development uses tsx for TypeScript execution, production uses esbuild for bundling.
 
-**API Design**: RESTful API endpoints mounted under `/api` prefix. Currently implements a minimal API surface focused on news retrieval. The architecture supports future expansion with the `registerRoutes` pattern.
+**API Design**: RESTful API endpoints mounted under `/api` prefix. Implements:
+- News retrieval endpoint (`GET /api/news`)
+- AI chat assistant endpoint (`POST /api/chat`) using Groq's Llama 3.3 70B model
+- Text-to-Speech endpoint (`POST /api/tts`) using Groq's PlayAI TTS integration
+The architecture supports future expansion with the `registerRoutes` pattern.
 
 **Development Environment**: Custom Vite integration in development mode with HMR (Hot Module Replacement) through middleware mode. Replit-specific plugins provide runtime error overlays and development banners.
 
@@ -76,6 +86,11 @@ Preferred communication style: Simple, everyday language.
 ## External Dependencies
 
 ### Third-Party Services
+
+**AI & TTS Services**: Integrated with Groq API for:
+- Llama 3.3 70B conversational AI for investment education
+- PlayAI TTS for text-to-speech synthesis (voice: Calum-PlayAI)
+- API key managed through environment variable `GROQ_API_KEY`
 
 **News Integration (Planned)**: Documentation exists for integrating external news APIs including:
 - NewsAPI for general financial news filtering by Angola/Portuguese content
