@@ -21,14 +21,14 @@ export default function ProductCards() {
   return (
     <section className="py-16 md:py-24 relative overflow-hidden">
       {/* Video Background */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none">
+      <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
         <iframe
-          className="absolute inset-0 w-full h-full"
+          className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100%] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2"
           src="https://www.youtube.com/embed/8ljGmIakBWM?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&autohide=1&modestbranding=1&vq=hd1080&playlist=8ljGmIakBWM&playsinline=1&disablekb=1&fs=0&rel=0"
           title="Background video"
           frameBorder="0"
           allow="autoplay; encrypted-media"
-          style={{ objectFit: 'cover' }}
+          style={{ pointerEvents: 'none' }}
         />
       </div>
       {/* Overlay */}
