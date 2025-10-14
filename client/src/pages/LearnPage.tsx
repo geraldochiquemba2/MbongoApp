@@ -12,16 +12,21 @@ export default function LearnPage() {
       </div>
       <Navbar />
       <main className="flex-1">
-        <section className="py-16 md:py-24 bg-gradient-to-br from-primary/10 to-accent/30">
+        <section 
+          className="relative py-16 md:py-24 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://cdn.borainvestir.b3.com.br/borainvestir/2022/07/28115421/quatro-pessoas-discutindo.jpg.webp')`
+          }}
+        >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
-              <div className="inline-flex p-4 bg-primary/10 rounded-2xl mb-6">
-                <GraduationCap className="h-12 w-12 text-primary" />
+              <div className="inline-flex p-4 bg-white/10 backdrop-blur-sm rounded-2xl mb-6">
+                <GraduationCap className="h-12 w-12 text-white" />
               </div>
-              <h1 className="font-heading text-4xl md:text-5xl font-bold mb-4">
+              <h1 className="font-heading text-4xl md:text-5xl font-bold mb-4 text-white">
                 Aprenda a Investir
               </h1>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-white/90 max-w-2xl mx-auto">
                 Descubra o seu perfil de investidor e aprenda sobre os produtos disponíveis
               </p>
             </div>
