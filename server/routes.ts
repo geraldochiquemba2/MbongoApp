@@ -10,11 +10,11 @@ import { setupAuth } from "./auth";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes: /api/register, /api/login, /api/logout, /api/user
   setupAuth(app);
-  
+
   // Health check endpoint for monitoring and keep-alive
   app.get("/api/health", async (req, res) => {
-    res.status(200).json({ 
-      status: "OK", 
+    res.status(200).json({
+      status: "OK",
       timestamp: new Date().toISOString(),
       uptime: process.uptime()
     });
@@ -23,20 +23,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // News API endpoint - fetches financial news from Angola
   app.get("/api/news", async (req, res) => {
     try {
-      /* 
+      /*
        * INTEGRAÇÃO COM API REAL DE NOTÍCIAS
        * ====================================
-       * 
+       *
        * Para obter notícias reais em tempo real, siga os passos em:
        * docs/NEWS_API_INTEGRATION.md
-       * 
+       *
        * Opções de APIs:
        * 1. NewsAPI (https://newsapi.org) - Recomendado para começar
        * 2. Alpha Vantage (https://alphavantage.co) - Notícias financeiras
        * 3. Finage (https://finage.co.uk) - Streaming em tempo real
-       * 
+       *
        * Exemplo de integração com NewsAPI:
-       * 
+       *
        * const API_KEY = process.env.NEWS_API_KEY;
        * const response = await fetch(
        *   `https://newsapi.org/v2/everything?q=Angola+finanças&language=pt&apiKey=${API_KEY}`
@@ -44,16 +44,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
        * const data = await response.json();
        * const articles = data.articles.map(transformToNewsArticle);
        * return res.json(articles);
-       * 
+       *
        * O frontend já está configurado para:
        * - Auto-refresh a cada 5 minutos
        * - Refresh manual
        * - Indicador de última atualização
        */
-      
+
       // DADOS SIMULADOS - Baseados em informação real do setor financeiro angolano
       // Substitua este bloco pela chamada à API real
-      
+
       const mockNews: NewsArticle[] = [
         {
           id: "1",
@@ -136,7 +136,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           source: "Ministério das Finanças",
           category: "Privatizações",
           publishedAt: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000),
-          imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=800&q=80",
+          imageUrl: "https://images.unsplash.com/photo-1560472354-b33ff0c444a43?w=800&q=80",
           important: 1
         },
         {
@@ -154,7 +154,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       ];
 
       // Sort by date (most recent first)
-      const sortedNews = mockNews.sort((a, b) => 
+      const sortedNews = mockNews.sort((a, b) =>
         b.publishedAt.getTime() - a.publishedAt.getTime()
       );
 
@@ -250,7 +250,7 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
       });
 
       const audioBuffer = Buffer.from(await response.arrayBuffer());
-      
+
       res.setHeader('Content-Type', 'audio/mpeg');
       res.setHeader('Content-Length', audioBuffer.length);
       res.send(audioBuffer);
@@ -264,25 +264,25 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
   app.post("/api/newsletter/subscribe", async (req, res) => {
     try {
       const validatedData = insertNewsletterSubscriberSchema.parse(req.body);
-      
+
       const existingSubscriber = await storage.getNewsletterSubscriber(validatedData.email);
-      
+
       if (!existingSubscriber) {
         await storage.subscribeNewsletter(validatedData);
       } else if (existingSubscriber.active === 0) {
         await storage.reactivateNewsletterSubscriber(validatedData.email);
       }
-      
+
       const emailResult = await sendWelcomeEmail(validatedData.email);
-      
+
       if (!emailResult.success) {
         console.error("Failed to send welcome email:", emailResult.error);
-        return res.status(200).json({ 
+        return res.status(200).json({
           message: "Email registrado. Nota: Configure um domínio verificado no Resend para enviar emails para todos os destinatários.",
           warning: true
         });
       }
-      
+
       res.status(200).json({ message: "Informações enviadas com sucesso!" });
     } catch (error) {
       if (error instanceof Error) {
@@ -307,17 +307,17 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
   app.post("/api/newsletter/unsubscribe", async (req, res) => {
     try {
       const { email } = req.body;
-      
+
       if (!email) {
         return res.status(400).json({ message: "Email é obrigatório" });
       }
-      
+
       const success = await storage.unsubscribeNewsletter(email);
-      
+
       if (!success) {
         return res.status(404).json({ message: "Email não encontrado" });
       }
-      
+
       res.json({ message: "Inscrição cancelada com sucesso" });
     } catch (error) {
       console.error("Error unsubscribing:", error);
@@ -329,21 +329,21 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
   app.post("/api/newsletter/send-opportunity", async (req, res) => {
     try {
       const { title, description, type, return_rate, link } = req.body;
-      
+
       if (!title || !description || !type) {
-        return res.status(400).json({ 
-          message: "Título, descrição e tipo são obrigatórios" 
+        return res.status(400).json({
+          message: "Título, descrição e tipo são obrigatórios"
         });
       }
-      
+
       const subscribers = await storage.getAllNewsletterSubscribers();
-      
+
       if (subscribers.length === 0) {
         return res.status(404).json({ message: "Nenhum assinante encontrado" });
       }
-      
+
       const subscriberEmails = subscribers.map(sub => sub.email);
-      
+
       const result = await sendInvestmentOpportunityEmail(subscriberEmails, {
         title,
         description,
@@ -351,10 +351,10 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
         return_rate,
         link
       });
-      
+
       if (!result.success) {
         console.error("Failed to send investment opportunity email:", result.error);
-        return res.status(502).json({ 
+        return res.status(502).json({
           message: "Erro ao enviar emails via Resend",
           error: result.error instanceof Error ? {
             name: result.error.name,
@@ -362,16 +362,16 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
           } : result.error
         });
       }
-      
+
       console.log(`Investment opportunity email sent to ${subscriberEmails.length} subscribers`);
-      res.json({ 
+      res.json({
         message: `Email enviado para ${subscriberEmails.length} assinantes`,
         data: result.data
       });
     } catch (error) {
       console.error("Error sending opportunity email:", error);
       const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
-      res.status(500).json({ 
+      res.status(500).json({
         message: "Erro ao enviar oportunidade",
         error: errorMessage
       });
@@ -387,7 +387,7 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
 
       const wallet = await storage.getOrCreateWallet(req.user.id);
       const subWallets = await storage.getSubWallets(wallet.id);
-      
+
       res.json({ wallet, subWallets });
     } catch (error) {
       console.error("Error fetching wallet:", error);
@@ -402,14 +402,14 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
       }
 
       const wallet = await storage.getOrCreateWallet(req.user.id);
-      
+
       const validatedData = insertSubWalletSchema.parse({
         ...req.body,
         walletId: wallet.id
       });
-      
+
       const subWallet = await storage.createSubWallet(validatedData);
-      
+
       res.status(201).json(subWallet);
     } catch (error) {
       if (error instanceof Error) {
@@ -427,19 +427,19 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
       }
 
       const validatedData = insertWalletTransactionSchema.parse(req.body);
-      
+
       const subWallet = await storage.getSubWallet(validatedData.subWalletId);
       if (!subWallet) {
         return res.status(404).json({ message: "Subcarteira não encontrada" });
       }
-      
+
       const wallet = await storage.getWallet(req.user.id);
       if (!wallet || wallet.id !== subWallet.walletId) {
         return res.status(403).json({ message: "Acesso negado" });
       }
-      
+
       const transaction = await storage.addTransaction(validatedData);
-      
+
       res.status(201).json(transaction);
     } catch (error) {
       if (error instanceof Error) {
@@ -457,19 +457,19 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
       }
 
       const { id } = req.params;
-      
+
       const subWallet = await storage.getSubWallet(id);
       if (!subWallet) {
         return res.status(404).json({ message: "Subcarteira não encontrada" });
       }
-      
+
       const wallet = await storage.getWallet(req.user.id);
       if (!wallet || wallet.id !== subWallet.walletId) {
         return res.status(403).json({ message: "Acesso negado" });
       }
-      
+
       const transactions = await storage.getTransactions(id);
-      
+
       res.json(transactions);
     } catch (error) {
       console.error("Error fetching transactions:", error);
