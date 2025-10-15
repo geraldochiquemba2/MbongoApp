@@ -45,11 +45,7 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="hidden md:flex items-center gap-3">
-            <Button variant="default" size="default" data-testid="button-comecar">
-              Quero Começar
-            </Button>
-          </div>
+          
 
           {/* Mobile Menu Button */}
           <button
@@ -82,11 +78,7 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
-            <div className="pt-2">
-              <Button className="w-full" variant="default" data-testid="button-mobile-comecar">
-                Quero Começar
-              </Button>
-            </div>
+            
           </div>
         )}
       </div>
