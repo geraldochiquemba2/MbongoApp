@@ -97,14 +97,15 @@ The architecture supports future expansion with the `registerRoutes` pattern.
 - PlayAI TTS for text-to-speech synthesis (voice: Calum-PlayAI)
 - API key managed through environment variable `GROQ_API_KEY`
 
-**Email Services**: Integrated with Brevo (formerly Sendinblue) for transactional emails:
+**Email Services**: Integrated with Resend for transactional emails:
 - Newsletter subscription welcome emails
 - Investment opportunity notifications to subscribers
 - Professional HTML email templates with Mbongo branding
-- API key managed through environment variable `BREVO_API_KEY`
-- Uses `noreply@sendinblue.com` as sender (free tier)
+- API key managed through environment variable `RESEND_API_KEY`
+- Uses `onboarding@resend.dev` as sender (free tier)
 - Support for batch email sending to multiple subscribers
-- Free tier: 300 emails/day without domain verification required
+- Free tier: 3,000 emails/month (100 emails/day) without domain verification required
+- Migrated from Brevo (October 2025) due to account activation issues
 
 **News Integration (Planned)**: Documentation exists for integrating external news APIs including:
 - NewsAPI for general financial news filtering by Angola/Portuguese content
@@ -175,7 +176,7 @@ Current implementation uses mock data that mirrors real Angolan financial news, 
 **Environment Variables Required**:
 - `NODE_ENV=production`
 - `GROQ_API_KEY` - For AI chat and TTS features
-- `BREVO_API_KEY` - For email notifications (newsletter welcome and opportunities)
+- `RESEND_API_KEY` - For email notifications (newsletter welcome and opportunities)
 - `PORT` - Auto-configured by Render (default 10000)
 - `RENDER_EXTERNAL_URL` - Auto-provided by Render for keep-alive
 
@@ -197,7 +198,7 @@ Current implementation uses mock data that mirrors real Angolan financial news, 
 - Investment opportunity email with customizable title, description, type, return rate, and link
 - Professional HTML emails with Mbongo branding and responsive design
 
-**Integration Note**: Using Brevo (ex-Sendinblue) for email sending with manual API key configuration stored in secrets. Brevo free tier allows 300 emails/day without domain verification, making it ideal for development and small-scale production use.
+**Integration Note**: Using Resend for email sending with manual API key configuration stored in secrets. Resend free tier allows 3,000 emails/month (100 emails/day) without domain verification, making it ideal for development and small-scale production use. Migrated from Brevo in October 2025 due to account activation requirements.
 
 **Free Tier Limits**:
 - 750 hours/month (sufficient for 24/7 with keep-alive)
