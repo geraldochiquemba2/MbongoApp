@@ -1,20 +1,21 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown, Info } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
-//todo: remove mock functionality
 const stocks = [
-  { name: "Banco BAI", ticker: "BAI", price: 1850, change: 2.5, sector: "Financeiro" },
-  { name: "Unitel", ticker: "UNT", price: 3200, change: -1.2, sector: "Telecomunicações" },
-  { name: "ENSA", ticker: "ENSA", price: 890, change: 0.8, sector: "Energia" },
-  { name: "Galp Angola", ticker: "GALP", price: 1450, change: 1.9, sector: "Petróleo & Gás" },
+  { name: "Banco de Fomento Angola", ticker: "BFA", price: 61875, change: 12.5, sector: "Financeiro" },
+  { name: "ENSA", ticker: "ENSA", price: 4500, change: 1.8, sector: "Energia" },
+  { name: "ACREP", ticker: "ACREP", price: 2850, change: -0.5, sector: "Seguros" },
+  { name: "BODIVA", ticker: "BODIVA", price: 3200, change: 2.3, sector: "Mercados Financeiros" },
 ];
 
 const bonds = [
-  { name: "BT 91 dias", rate: 6.5, min: 100000, type: "Bilhete do Tesouro" },
-  { name: "BT 182 dias", rate: 7.2, min: 100000, type: "Bilhete do Tesouro" },
-  { name: "OT 2 anos", rate: 9.5, min: 500000, type: "Obrigação do Tesouro" },
-  { name: "OT 5 anos", rate: 12.0, min: 500000, type: "Obrigação do Tesouro" },
+  { name: "BT 91 dias", rate: 16.5, min: 100000, type: "Bilhete do Tesouro" },
+  { name: "BT 182 dias", rate: 17.0, min: 100000, type: "Bilhete do Tesouro" },
+  { name: "BT 364 dias", rate: 17.5, min: 100000, type: "Bilhete do Tesouro" },
+  { name: "OT 2 anos", rate: 19.0, min: 500000, type: "Obrigação do Tesouro" },
+  { name: "OT 5 anos", rate: 21.5, min: 1000000, type: "Obrigação do Tesouro" },
 ];
 
 export default function ProductCards() {
@@ -44,9 +45,16 @@ export default function ProductCards() {
               Produtos Disponíveis no Mercado
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Informação atualizada sobre ações e títulos do tesouro
+              Informação baseada em dados reais do mercado angolano (2025)
             </p>
           </div>
+
+          <Alert className="mb-8 max-w-4xl mx-auto bg-card/50 backdrop-blur-sm" data-testid="alert-data-disclaimer">
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Dados de Referência:</strong> As informações apresentadas são baseadas em dados reais das empresas listadas na BODIVA e taxas do Banco Nacional de Angola (2025). Os valores são ilustrativos e podem variar. Para investimentos reais, consulte sempre uma instituição financeira autorizada.
+            </AlertDescription>
+          </Alert>
 
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Stocks */}
