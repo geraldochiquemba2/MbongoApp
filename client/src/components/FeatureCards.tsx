@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { GraduationCap, TrendingUp, Calculator, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import backgroundImage from "@assets/Gemini_Generated_Image_fuqquwfuqquwfuqq_1760444548490.png";
+import backgroundImage from "@assets/Gemini_Generated_Image_1eppg21eppg21epp_1760523431351.png";
 
 const features = [
   {
