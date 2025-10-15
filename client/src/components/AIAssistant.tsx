@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,10 +34,20 @@ export default function AIAssistant() {
       return response.json();
     },
     onSuccess: (data) => {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: data.reply },
-      ]);
+      setMessages((prev) => {
+        const newMessages = [
+          ...prev,
+          { role: "assistant", content: data.reply },
+        ];
+        
+        // Reproduzir áudio automaticamente
+        setTimeout(() => {
+          const lastAssistantIndex = newMessages.length - 1;
+          handlePlayAudio(data.reply, lastAssistantIndex);
+        }, 100);
+        
+        return newMessages;
+      });
     },
     onError: (error) => {
       setMessages((prev) => prev.slice(0, -1));
