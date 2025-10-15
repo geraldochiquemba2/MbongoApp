@@ -5,6 +5,15 @@ import type { NewsArticle } from "@shared/schema";
 import Groq from "groq-sdk";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint for monitoring and keep-alive
+  app.get("/api/health", async (req, res) => {
+    res.status(200).json({ 
+      status: "OK", 
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime()
+    });
+  });
+
   // News API endpoint - fetches financial news from Angola
   app.get("/api/news", async (req, res) => {
     try {

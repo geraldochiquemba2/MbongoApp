@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import cron from "node-cron";
 
 const app = express();
 app.use(express.json());
@@ -67,5 +68,26 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    
+    // Keep-alive cron job for Render free tier (only in production)
+    if (process.env.NODE_ENV === "production" && process.env.RENDER_SERVICE_NAME) {
+      const appUrl = process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`;
+      
+      // Ping health endpoint every 10 minutes to prevent Render from sleeping
+      cron.schedule('*/10 * * * *', async () => {
+        try {
+          const response = await fetch(`${appUrl}/api/health`);
+          if (response.ok) {
+            log('[Keep-Alive] ✓ Self-ping successful');
+          } else {
+            log(`[Keep-Alive] ✗ Ping failed with status: ${response.status}`);
+          }
+        } catch (error) {
+          log(`[Keep-Alive] ✗ Ping error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+      });
+      
+      log('[Keep-Alive] Cron job started - pinging every 10 minutes');
+    }
   });
 })();
