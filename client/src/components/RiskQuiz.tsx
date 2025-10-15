@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "wouter";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -88,6 +89,7 @@ const profiles = {
 };
 
 export default function RiskQuiz() {
+  const [, setLocation] = useLocation();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showResult, setShowResult] = useState(false);
@@ -177,7 +179,7 @@ export default function RiskQuiz() {
             <Button onClick={resetQuiz} variant="outline" className="flex-1" data-testid="button-restart-quiz">
               Refazer Teste
             </Button>
-            <Button className="flex-1" data-testid="button-view-products">
+            <Button onClick={() => setLocation("/onde-comprar")} className="flex-1" data-testid="button-view-products">
               Ver Produtos
             </Button>
           </div>
