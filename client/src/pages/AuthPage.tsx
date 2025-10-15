@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Redirect } from "wouter";
+import { Redirect, Link } from "wouter";
 import { useUser } from "@/hooks/useUser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertUserSchema, type InsertUser } from "@shared/schema";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ArrowLeft } from "lucide-react";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -81,6 +82,19 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="mb-4"
+          asChild
+          data-testid="button-back"
+        >
+          <Link href="/">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Voltar
+          </Link>
+        </Button>
+        
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "login" | "register")}>
           <TabsList className="grid w-full grid-cols-2" data-testid="tabs-auth">
             <TabsTrigger value="login" data-testid="tab-login">Entrar</TabsTrigger>
