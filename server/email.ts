@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const ELASTICEMAIL_API_URL = 'https://api.elasticemail.com/v4/emails';
+const ELASTICEMAIL_API_URL = 'https://api.elasticemail.com/v4/emails/transactional';
 const ELASTICEMAIL_API_KEY = process.env.ELASTICEMAIL_API_KEY;
 
 export async function sendWelcomeEmail(email: string) {
