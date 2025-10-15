@@ -32,6 +32,32 @@ export class MemStorage implements IStorage {
     });
     this.users = new Map();
     this.newsletterSubscribers = new Map();
+    
+    this.initializeTestUser();
+  }
+  
+  private async initializeTestUser() {
+    const { scrypt, randomBytes } = await import("crypto");
+    const { promisify } = await import("util");
+    const scryptAsync = promisify(scrypt);
+    
+    const password = "123456";
+    const salt = randomBytes(16).toString("hex");
+    const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+    const hashedPassword = `${buf.toString("hex")}.${salt}`;
+    
+    const testUser: User = {
+      id: randomUUID(),
+      name: "Usuário Teste",
+      phone: "923456789",
+      password: hashedPassword,
+      createdAt: new Date()
+    };
+    
+    this.users.set(testUser.id, testUser);
+    console.log("✅ Usuário de teste criado:");
+    console.log("   Telefone: 923456789");
+    console.log("   Senha: 123456");
   }
 
   async getUser(id: string): Promise<User | undefined> {
