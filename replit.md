@@ -38,6 +38,10 @@ Preferred communication style: Simple, everyday language.
 - News retrieval endpoint (`GET /api/news`)
 - AI chat assistant endpoint (`POST /api/chat`) using Groq's Llama 3.3 70B model
 - Text-to-Speech endpoint (`POST /api/tts`) using Groq's PlayAI TTS integration
+- Newsletter subscription endpoint (`POST /api/newsletter/subscribe`) with automatic welcome email
+- Newsletter unsubscribe endpoint (`POST /api/newsletter/unsubscribe`)
+- Newsletter subscribers list endpoint (`GET /api/newsletter/subscribers`) for admin
+- Send investment opportunity endpoint (`POST /api/newsletter/send-opportunity`) for admin notifications
 The architecture supports future expansion with the `registerRoutes` pattern.
 
 **Development Environment**: Custom Vite integration in development mode with HMR (Hot Module Replacement) through middleware mode. Replit-specific plugins provide runtime error overlays and development banners.
@@ -53,6 +57,7 @@ The architecture supports future expansion with the `registerRoutes` pattern.
 **Schema Design**: 
 - Users table with UUID primary keys, username/password authentication fields
 - News articles table with rich metadata (title, description, content, source, category, publication date, image URL, importance flag)
+- Newsletter subscribers table with email, subscription date, and active status
 - Uses `createInsertSchema` from drizzle-zod for type-safe insert operations
 
 **Migration Strategy**: Drizzle Kit manages migrations with schema stored in `/shared/schema.ts` and migration files output to `/migrations` directory.
@@ -91,6 +96,14 @@ The architecture supports future expansion with the `registerRoutes` pattern.
 - Llama 3.3 70B conversational AI for investment education
 - PlayAI TTS for text-to-speech synthesis (voice: Calum-PlayAI)
 - API key managed through environment variable `GROQ_API_KEY`
+
+**Email Services**: Integrated with Resend for transactional emails:
+- Newsletter subscription welcome emails
+- Investment opportunity notifications to subscribers
+- Professional HTML email templates with Mbongo branding
+- API key managed through environment variable `RESEND_API_KEY`
+- Uses `onboarding@resend.dev` as sender (test domain) or custom verified domain
+- Support for batch email sending to multiple subscribers
 
 **News Integration (Planned)**: Documentation exists for integrating external news APIs including:
 - NewsAPI for general financial news filtering by Angola/Portuguese content
@@ -161,8 +174,29 @@ Current implementation uses mock data that mirrors real Angolan financial news, 
 **Environment Variables Required**:
 - `NODE_ENV=production`
 - `GROQ_API_KEY` - For AI chat and TTS features
+- `RESEND_API_KEY` - For email notifications (newsletter welcome and opportunities)
 - `PORT` - Auto-configured by Render (default 10000)
 - `RENDER_EXTERNAL_URL` - Auto-provided by Render for keep-alive
+
+## Newsletter System
+
+**Implementation**: Full newsletter subscription system with email notifications
+
+**Features**:
+- Newsletter subscription form in footer section
+- Email validation with Zod schema
+- Duplicate subscription prevention
+- Welcome email sent automatically on subscription using Resend
+- Admin endpoint to send investment opportunity emails to all subscribers
+- Unsubscribe functionality
+- In-memory storage (subscribers are lost on server restart - migrate to PostgreSQL for production)
+
+**Email Templates**:
+- Welcome email with platform introduction and investment categories
+- Investment opportunity email with customizable title, description, type, return rate, and link
+- Professional HTML emails with Mbongo branding and responsive design
+
+**Integration Note**: Resend connector integration was dismissed by user. Using manual API key configuration stored in secrets instead. Future sessions should consider using the Resend connector (connector:ccfg_resend_01K69QKYK789WN202XSE3QS17V) for automatic key rotation and management.
 
 **Free Tier Limits**:
 - 750 hours/month (sufficient for 24/7 with keep-alive)

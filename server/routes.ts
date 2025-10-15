@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import type { NewsArticle } from "@shared/schema";
 import { insertNewsletterSubscriberSchema } from "@shared/schema";
 import Groq from "groq-sdk";
+import { sendWelcomeEmail, sendInvestmentOpportunityEmail } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for monitoring and keep-alive
@@ -267,11 +268,15 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
           return res.status(400).json({ message: "Este email já está inscrito na newsletter" });
         } else {
           existingSubscriber.active = 1;
+          await sendWelcomeEmail(validatedData.email);
           return res.json({ message: "Inscrição reativada com sucesso!" });
         }
       }
       
       const subscriber = await storage.subscribeNewsletter(validatedData);
+      
+      await sendWelcomeEmail(validatedData.email);
+      
       res.status(201).json({ message: "Inscrição realizada com sucesso!", subscriber });
     } catch (error) {
       if (error instanceof Error) {
@@ -311,6 +316,59 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
     } catch (error) {
       console.error("Error unsubscribing:", error);
       res.status(500).json({ message: "Erro ao cancelar inscrição" });
+    }
+  });
+
+  // Send investment opportunity email to all subscribers (admin endpoint)
+  app.post("/api/newsletter/send-opportunity", async (req, res) => {
+    try {
+      const { title, description, type, return_rate, link } = req.body;
+      
+      if (!title || !description || !type) {
+        return res.status(400).json({ 
+          message: "Título, descrição e tipo são obrigatórios" 
+        });
+      }
+      
+      const subscribers = await storage.getAllNewsletterSubscribers();
+      
+      if (subscribers.length === 0) {
+        return res.status(404).json({ message: "Nenhum assinante encontrado" });
+      }
+      
+      const subscriberEmails = subscribers.map(sub => sub.email);
+      
+      const result = await sendInvestmentOpportunityEmail(subscriberEmails, {
+        title,
+        description,
+        type,
+        return_rate,
+        link
+      });
+      
+      if (!result.success) {
+        console.error("Failed to send investment opportunity email:", result.error);
+        return res.status(502).json({ 
+          message: "Erro ao enviar emails via Resend",
+          error: result.error instanceof Error ? {
+            name: result.error.name,
+            message: result.error.message
+          } : result.error
+        });
+      }
+      
+      console.log(`Investment opportunity email sent to ${subscriberEmails.length} subscribers`);
+      res.json({ 
+        message: `Email enviado para ${subscriberEmails.length} assinantes`,
+        data: result.data
+      });
+    } catch (error) {
+      console.error("Error sending opportunity email:", error);
+      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido";
+      res.status(500).json({ 
+        message: "Erro ao enviar oportunidade",
+        error: errorMessage
+      });
     }
   });
 
