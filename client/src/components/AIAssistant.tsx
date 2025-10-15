@@ -27,6 +27,7 @@ export default function AIAssistant() {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const manualStopRef = useRef(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
   const chatMutation = useMutation({
@@ -114,6 +115,10 @@ export default function AIAssistant() {
       .replace(/~{1,2}/g, '')
       .trim();
   };
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handlePlayAudio = (text: string, index: number) => {
     if (playingIndex === index) {
@@ -287,6 +292,7 @@ export default function AIAssistant() {
                     </div>
                   </div>
                 )}
+                <div ref={messagesEndRef} />
               </div>
             </ScrollArea>
             
