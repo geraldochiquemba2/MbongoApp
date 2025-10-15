@@ -1,0 +1,49 @@
+Descrição Formal:
+A Carteira Digital de Reserva é uma conta virtual integrada à plataforma, destinada a acumular fundos de forma segura e orientada a objetivos de investimento. O cliente define um período e meta de poupança (por exemplo, 6 meses para investir em obrigações da Sonangol), e o sistema bloqueia o saldo até o prazo definido.
+Funcionalidades-Chave:
+•	Depósitos manuais e automáticos (via Multicaixa Express, Mobile Money, ou transferência bancária).
+•	Simulação de rendimentos potenciais conforme o tipo de activo pretendido.
+•	Possibilidade de criar “subcarteiras” com metas específicas (ex: Reserva para Obrigações, Reserva para Acções).
+•	Visualização gráfica do progresso de poupança.
+Benefício:
+Estimula o hábito de poupar com propósito e disciplina, preparando o investidor para a entrada segura no mercado de capitais.
+______________
+ 2. Assessor de Investimento Inteligente (Orientação de Decisão)
+Descrição Formal:
+O Assessor de Investimento Inteligente é um módulo de recomendação baseado em IA e aprendizado de máquina que analisa o perfil de risco, idade, rendimento, objectivos e histórico financeiro do cliente, sugerindo as melhores opções de activos disponíveis na BODIVA — acções, obrigações ou fundos.
+Funcionalidades-Chave:
+•	Questionário de perfil do investidor (Conservador, Moderado, Arrojado).
+•	Sugestões personalizadas com base no capital acumulado na Carteira Digital.
+•	Acesso a relatórios resumidos e projeções de retorno (com linguagem simples).
+•	Alertas automáticos quando surgirem novas emissões ou oportunidades compatíveis com o perfil do cliente.
+Benefício:
+Democratiza o acesso ao mercado de capitais, reduzindo a assimetria de informação e promovendo decisões conscientes.
+
+ 3. Poupança Automática/Recorrente
+Descrição Formal:
+A Poupança Automática permite ao cliente programar transferências periódicas (semanais ou mensais) da sua conta bancária ou carteira digital para a Carteira de Reserva, assegurando constância no hábito de poupar.
+Funcionalidades-Chave:
+•	Configuração do valor e periodicidade da poupança (ex: 20.000 Kz/mês).
+•	Opção de “arredondamento automático” — por exemplo, arredondar compras para o valor inteiro e guardar a diferença.
+•	Pausa temporária sem perda dos dados da meta.
+•	Notificações motivacionais e relatórios de progresso.
+Benefício:
+Transforma a poupança num processo automático e sem esforço, reduzindo o risco de consumo impulsivo.
+______________
+ 4. Análise Simplificada dos Emissores
+Descrição Formal:
+O módulo de Análise Simplificada dos Emissores apresenta informações essenciais sobre as empresas ou entidades que emitem activos na BODIVA, traduzindo dados financeiros complexos em linguagem clara e visual.
+Funcionalidades-Chave:
+•	Indicadores básicos: rentabilidade, liquidez, endividamento, histórico de pagamento de dividendos ou juros.
+•	“Resumo do Investidor”: gráficos de desempenho histórico e nível de risco.
+•	Sistema de pontuação (rating interno) para ajudar o cliente a comparar emissores.
+•	Integração com o Assessor Inteligente para contextualizar recomendações.
+Benefício:
+Aumenta a transparência e confiança, permitindo que até investidores iniciantes compreendam a saúde financeira dos emissores antes de investir.
+______________
+ Visão Integrada da Solução
+Esses quatro módulos funcionam de forma interligada dentro da plataforma:
+1.	O cliente poupa automaticamente na Carteira Digital.
+2.	O Assessor Inteligente analisa o perfil e sugere investimentos adequados.
+3.	Antes de aplicar, o cliente visualiza uma análise simplificada dos emissores.
+4.	O sistema registra as decisões e gera relatórios periódicos de desempenho e progresso rumo aos objetivos.

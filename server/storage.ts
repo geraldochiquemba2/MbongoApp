@@ -61,18 +61,62 @@ export class MemStorage implements IStorage {
     const buf = (await scryptAsync(password, salt, 64)) as Buffer;
     const hashedPassword = `${buf.toString("hex")}.${salt}`;
     
+    const testUserId = randomUUID();
     const testUser: User = {
-      id: randomUUID(),
-      name: "Usuário Teste",
+      id: testUserId,
+      name: "Geraldo Abreu",
       phone: "923456789",
       password: hashedPassword,
       createdAt: new Date()
     };
     
     this.users.set(testUser.id, testUser);
+    
+    // Criar carteira com saldo inicial de 50.000 Kz
+    const walletId = randomUUID();
+    const wallet: Wallet = {
+      id: walletId,
+      userId: testUserId,
+      totalBalance: "50000.00",
+      createdAt: new Date(),
+    };
+    this.wallets.set(walletId, wallet);
+    
+    // Criar subcarteira de exemplo com saldo inicial
+    const subWalletId = randomUUID();
+    const targetDate = new Date();
+    targetDate.setMonth(targetDate.getMonth() + 6); // Meta para 6 meses
+    
+    const subWallet: SubWallet = {
+      id: subWalletId,
+      walletId: walletId,
+      name: "Reserva para Ações BODIVA",
+      goal: "Acumular capital para investir em ações de empresas consolidadas na BODIVA, com foco em empresas do setor financeiro e energia.",
+      targetAmount: "100000.00",
+      currentAmount: "50000.00",
+      targetDate: targetDate,
+      investmentType: "acoes",
+      createdAt: new Date(),
+    };
+    this.subWallets.set(subWalletId, subWallet);
+    
+    // Adicionar transação inicial
+    const transactionId = randomUUID();
+    const transaction: WalletTransaction = {
+      id: transactionId,
+      subWalletId: subWalletId,
+      amount: "50000.00",
+      type: "deposit",
+      description: "Depósito inicial - Saldo de boas-vindas",
+      createdAt: new Date(),
+    };
+    this.transactions.set(transactionId, transaction);
+    
     console.log("✅ Usuário de teste criado:");
+    console.log("   Nome: Geraldo Abreu");
     console.log("   Telefone: 923456789");
     console.log("   Senha: 123456");
+    console.log("   Carteira: 50.000,00 Kz");
   }
 
   async getUser(id: string): Promise<User | undefined> {
