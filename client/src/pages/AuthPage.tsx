@@ -107,7 +107,7 @@ export default function AuthPage() {
         </Button>
         
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "login" | "register")}>
-          <TabsList className="grid w-full grid-cols-2" data-testid="tabs-auth">
+          <TabsList className="grid w-full grid-cols-2 bg-muted/50 backdrop-blur-md" data-testid="tabs-auth">
             <TabsTrigger value="login" data-testid="tab-login">Entrar</TabsTrigger>
             <TabsTrigger value="register" data-testid="tab-register">Criar Conta</TabsTrigger>
           </TabsList>
