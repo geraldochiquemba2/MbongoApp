@@ -5,8 +5,12 @@ import type { NewsArticle } from "@shared/schema";
 import { insertNewsletterSubscriberSchema } from "@shared/schema";
 import Groq from "groq-sdk";
 import { sendWelcomeEmail, sendInvestmentOpportunityEmail } from "./email";
+import { setupAuth } from "./auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Setup authentication routes: /api/register, /api/login, /api/logout, /api/user
+  setupAuth(app);
+  
   // Health check endpoint for monitoring and keep-alive
   app.get("/api/health", async (req, res) => {
     res.status(200).json({ 
