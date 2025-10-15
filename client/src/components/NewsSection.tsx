@@ -3,6 +3,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Newspaper, Bell, TrendingUp } from "lucide-react";
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
+import financeImage1 from "@assets/stock_images/financial_market_tra_c625e054.jpg";
+import financeImage2 from "@assets/stock_images/financial_market_tra_22cc0dc1.jpg";
+import financeImage3 from "@assets/stock_images/financial_market_tra_ba4bf22a.jpg";
+import financeImage4 from "@assets/stock_images/financial_market_tra_8995ce36.jpg";
+import financeImage5 from "@assets/stock_images/financial_market_tra_eaed88e1.jpg";
+
+const financeImages = [
+  financeImage1,
+  financeImage2,
+  financeImage3,
+  financeImage4,
+  financeImage5
+];
 
 //todo: remove mock functionality
 const news = [
@@ -38,18 +52,34 @@ const ipoAlert = {
 };
 
 export default function NewsSection() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % financeImages.length);
+    }, 5000); // Change image every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="py-16 md:py-24 relative overflow-hidden">
-      {/* Video Background */}
+      {/* Image Carousel Background */}
       <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden">
-        <iframe
-          className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100%] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2"
-          src="https://www.youtube.com/embed/0cauohxCTAY?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&autohide=1&modestbranding=1&vq=hd1080&playlist=0cauohxCTAY&playsinline=1&disablekb=1&fs=0&rel=0"
-          title="Background video"
-          frameBorder="0"
-          allow="autoplay; encrypted-media"
-          style={{ pointerEvents: 'none' }}
-        />
+        {financeImages.map((image, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <img
+              src={image}
+              alt={`Finance background ${index + 1}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ))}
       </div>
       {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/50 to-background/40"></div>
