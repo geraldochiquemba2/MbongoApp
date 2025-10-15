@@ -198,6 +198,8 @@ Current implementation uses mock data that mirrors real Angolan financial news, 
 
 **Integration Note**: Resend connector integration was dismissed by user. Using manual API key configuration stored in secrets instead. Future sessions should consider using the Resend connector (connector:ccfg_resend_01K69QKYK789WN202XSE3QS17V) for automatic key rotation and management.
 
+**Important Email Limitation**: Resend in test mode (without verified domain) only sends emails to the account owner's email (geraldochiquemba@gmail.com). To send emails to all users, you MUST verify a custom domain at resend.com/domains and update the `from` address in server/email.ts to use that domain.
+
 **Free Tier Limits**:
 - 750 hours/month (sufficient for 24/7 with keep-alive)
 - 100 GB bandwidth/month

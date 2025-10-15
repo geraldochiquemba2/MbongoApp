@@ -269,7 +269,15 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
         await storage.reactivateNewsletterSubscriber(validatedData.email);
       }
       
-      await sendWelcomeEmail(validatedData.email);
+      const emailResult = await sendWelcomeEmail(validatedData.email);
+      
+      if (!emailResult.success) {
+        console.error("Failed to send welcome email:", emailResult.error);
+        return res.status(200).json({ 
+          message: "Email registrado. Nota: Configure um domínio verificado no Resend para enviar emails para todos os destinatários.",
+          warning: true
+        });
+      }
       
       res.status(200).json({ message: "Informações enviadas com sucesso!" });
     } catch (error) {
