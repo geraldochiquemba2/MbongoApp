@@ -113,7 +113,7 @@ export default function AuthPage() {
           </TabsList>
 
           <TabsContent value="login">
-            <Card>
+            <Card className="bg-card/50 backdrop-blur-md">
               <CardHeader>
                 <CardTitle>Entrar</CardTitle>
                 <CardDescription>Entre com seu telefone e senha para acessar sua conta.</CardDescription>
@@ -172,7 +172,7 @@ export default function AuthPage() {
           </TabsContent>
 
           <TabsContent value="register">
-            <Card>
+            <Card className="bg-card/50 backdrop-blur-md">
               <CardHeader>
                 <CardTitle>Criar Conta</CardTitle>
                 <CardDescription>Preencha os dados abaixo para criar sua conta.</CardDescription>
