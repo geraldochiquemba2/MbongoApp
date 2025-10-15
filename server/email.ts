@@ -2,10 +2,12 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const FROM_EMAIL = process.env.FROM_EMAIL || 'Mbongo <onboarding@resend.dev>';
+
 export async function sendWelcomeEmail(email: string) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Mbongo <onboarding@resend.dev>',
+      from: FROM_EMAIL,
       to: [email],
       subject: 'Bem-vindo à +Mbongo - Seu guia no mercado de investimentos',
       html: `
@@ -110,7 +112,7 @@ export async function sendInvestmentOpportunityEmail(
 ) {
   try {
     const { data, error } = await resend.emails.send({
-      from: 'Mbongo Oportunidades <onboarding@resend.dev>',
+      from: FROM_EMAIL,
       to: subscribers,
       subject: `Nova Oportunidade: ${opportunity.title}`,
       html: `
