@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -60,3 +60,56 @@ export const insertNewsletterSubscriberSchema = createInsertSchema(newsletterSub
 
 export type InsertNewsletterSubscriber = z.infer<typeof insertNewsletterSubscriberSchema>;
 export type NewsletterSubscriber = typeof newsletterSubscribers.$inferSelect;
+
+export const wallets = pgTable("wallets", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  totalBalance: decimal("total_balance", { precision: 15, scale: 2 }).notNull().default('0'),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const insertWalletSchema = createInsertSchema(wallets).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertWallet = z.infer<typeof insertWalletSchema>;
+export type Wallet = typeof wallets.$inferSelect;
+
+export const subWallets = pgTable("sub_wallets", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  walletId: varchar("wallet_id").notNull().references(() => wallets.id),
+  name: text("name").notNull(),
+  goal: text("goal").notNull(),
+  targetAmount: decimal("target_amount", { precision: 15, scale: 2 }).notNull(),
+  currentAmount: decimal("current_amount", { precision: 15, scale: 2 }).notNull().default('0'),
+  targetDate: timestamp("target_date").notNull(),
+  investmentType: text("investment_type").notNull(),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const insertSubWalletSchema = createInsertSchema(subWallets).omit({
+  id: true,
+  createdAt: true,
+  currentAmount: true,
+});
+
+export type InsertSubWallet = z.infer<typeof insertSubWalletSchema>;
+export type SubWallet = typeof subWallets.$inferSelect;
+
+export const walletTransactions = pgTable("wallet_transactions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  subWalletId: varchar("sub_wallet_id").notNull().references(() => subWallets.id),
+  amount: decimal("amount", { precision: 15, scale: 2 }).notNull(),
+  type: text("type").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
+});
+
+export const insertWalletTransactionSchema = createInsertSchema(walletTransactions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type InsertWalletTransaction = z.infer<typeof insertWalletTransactionSchema>;
+export type WalletTransaction = typeof walletTransactions.$inferSelect;
