@@ -221,73 +221,101 @@ export default function AIAssistant() {
             </div>
           </div>
         ) : (
-          <ScrollArea className="h-[400px] pr-4">
-            <div className="space-y-4">
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex gap-3 ${
-                    message.role === "user" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  {message.role === "assistant" && (
+          <div className="relative">
+            <ScrollArea className="h-[400px] pr-4">
+              <div className="space-y-4">
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={`flex gap-3 ${
+                      message.role === "user" ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    {message.role === "assistant" && (
+                      <div className="p-2 bg-primary/10 rounded-lg h-fit">
+                        <Bot className="h-4 w-4 text-primary" />
+                      </div>
+                    )}
+                    <div className="flex flex-col gap-2 max-w-[80%]">
+                      <div
+                        className={`rounded-lg px-4 py-3 ${
+                          message.role === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-accent"
+                        }`}
+                        data-testid={`message-${message.role}-${index}`}
+                      >
+                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                          {message.content}
+                        </p>
+                      </div>
+                      {message.role === "assistant" && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handlePlayAudio(message.content, index)}
+                          className="self-start"
+                          data-testid={`button-play-audio-${index}`}
+                        >
+                          {playingIndex === index ? (
+                            <>
+                              <VolumeX className="h-4 w-4 mr-2" />
+                              Parar
+                            </>
+                          ) : (
+                            <>
+                              <Volume2 className="h-4 w-4 mr-2" />
+                              Ouvir resposta
+                            </>
+                          )}
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                {chatMutation.isPending && (
+                  <div className="flex gap-3 justify-start">
                     <div className="p-2 bg-primary/10 rounded-lg h-fit">
                       <Bot className="h-4 w-4 text-primary" />
                     </div>
-                  )}
-                  <div className="flex flex-col gap-2 max-w-[80%]">
-                    <div
-                      className={`rounded-lg px-4 py-3 ${
-                        message.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-accent"
-                      }`}
-                      data-testid={`message-${message.role}-${index}`}
-                    >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                        {message.content}
-                      </p>
-                    </div>
-                    {message.role === "assistant" && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handlePlayAudio(message.content, index)}
-                        className="self-start"
-                        data-testid={`button-play-audio-${index}`}
-                      >
-                        {playingIndex === index ? (
-                          <>
-                            <VolumeX className="h-4 w-4 mr-2" />
-                            Parar
-                          </>
-                        ) : (
-                          <>
-                            <Volume2 className="h-4 w-4 mr-2" />
-                            Ouvir resposta
-                          </>
-                        )}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              ))}
-              {chatMutation.isPending && (
-                <div className="flex gap-3 justify-start">
-                  <div className="p-2 bg-primary/10 rounded-lg h-fit">
-                    <Bot className="h-4 w-4 text-primary" />
-                  </div>
-                  <div className="bg-accent rounded-lg px-4 py-3">
-                    <div className="flex gap-1">
-                      <div className="h-2 w-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
-                      <div className="h-2 w-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
-                      <div className="h-2 w-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+                    <div className="bg-accent rounded-lg px-4 py-3">
+                      <div className="flex gap-1">
+                        <div className="h-2 w-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "0ms" }}></div>
+                        <div className="h-2 w-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "150ms" }}></div>
+                        <div className="h-2 w-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: "300ms" }}></div>
+                      </div>
                     </div>
                   </div>
+                )}
+              </div>
+            </ScrollArea>
+            
+            {playingIndex !== null && (
+              <div className="sticky bottom-0 left-0 right-0 z-50 bg-card border-t border-border mt-2 p-3 rounded-md shadow-lg">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <Volume2 className="h-4 w-4 text-primary flex-shrink-0" />
+                    <span className="text-sm text-muted-foreground truncate">
+                      Reproduzindo resposta...
+                    </span>
+                  </div>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => {
+                      manualStopRef.current = true;
+                      window.speechSynthesis.cancel();
+                      setPlayingIndex(null);
+                    }}
+                    data-testid="button-stop-audio-fixed"
+                  >
+                    <VolumeX className="h-4 w-4 mr-2" />
+                    Parar
+                  </Button>
                 </div>
-              )}
-            </div>
-          </ScrollArea>
+              </div>
+            )}
+          </div>
         )}
 
         <form onSubmit={handleSubmit} className="flex gap-2">
