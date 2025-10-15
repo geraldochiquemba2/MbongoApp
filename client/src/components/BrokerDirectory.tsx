@@ -33,7 +33,7 @@ const brokers = [
     phone: "+244 222 676 700",
     email: "mercados@be.co.ao",
     address: "Luanda, Maculusso",
-    url: "https://www.be.co.ao"
+    url: "https://www.bancoeconomico.ao"
   },
   {
     name: "Banco Sol",
