@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type NewsletterSubscriber, type InsertNewsletterSubscriber } from "@shared/schema";
+import { type User, type InsertUser, type NewsletterSubscriber, type InsertNewsletterSubscriber, type Wallet, type InsertWallet, type SubWallet, type InsertSubWallet, type WalletTransaction, type InsertWalletTransaction } from "@shared/schema";
 import { randomUUID } from "crypto";
 import session from "express-session";
 import createMemoryStore from "memorystore";
@@ -19,12 +19,24 @@ export interface IStorage {
   getAllNewsletterSubscribers(): Promise<NewsletterSubscriber[]>;
   unsubscribeNewsletter(email: string): Promise<boolean>;
   reactivateNewsletterSubscriber(email: string): Promise<boolean>;
+  
+  getOrCreateWallet(userId: string): Promise<Wallet>;
+  getWallet(userId: string): Promise<Wallet | undefined>;
+  getSubWallets(walletId: string): Promise<SubWallet[]>;
+  createSubWallet(subWallet: InsertSubWallet): Promise<SubWallet>;
+  getSubWallet(id: string): Promise<SubWallet | undefined>;
+  updateSubWalletBalance(subWalletId: string, amount: string): Promise<void>;
+  addTransaction(transaction: InsertWalletTransaction): Promise<WalletTransaction>;
+  getTransactions(subWalletId: string): Promise<WalletTransaction[]>;
 }
 
 export class MemStorage implements IStorage {
   public sessionStore: session.Store;
   private users: Map<string, User>;
   private newsletterSubscribers: Map<string, NewsletterSubscriber>;
+  private wallets: Map<string, Wallet>;
+  private subWallets: Map<string, SubWallet>;
+  private transactions: Map<string, WalletTransaction>;
 
   constructor() {
     this.sessionStore = new MemoryStore({
@@ -32,6 +44,9 @@ export class MemStorage implements IStorage {
     });
     this.users = new Map();
     this.newsletterSubscribers = new Map();
+    this.wallets = new Map();
+    this.subWallets = new Map();
+    this.transactions = new Map();
     
     this.initializeTestUser();
   }
@@ -117,6 +132,90 @@ export class MemStorage implements IStorage {
       return true;
     }
     return false;
+  }
+
+  async getOrCreateWallet(userId: string): Promise<Wallet> {
+    const existingWallet = Array.from(this.wallets.values()).find(
+      (wallet) => wallet.userId === userId
+    );
+    
+    if (existingWallet) {
+      return existingWallet;
+    }
+    
+    const id = randomUUID();
+    const wallet: Wallet = {
+      id,
+      userId,
+      totalBalance: "0",
+      createdAt: new Date(),
+    };
+    this.wallets.set(id, wallet);
+    return wallet;
+  }
+
+  async getWallet(userId: string): Promise<Wallet | undefined> {
+    return Array.from(this.wallets.values()).find(
+      (wallet) => wallet.userId === userId
+    );
+  }
+
+  async getSubWallets(walletId: string): Promise<SubWallet[]> {
+    return Array.from(this.subWallets.values()).filter(
+      (subWallet) => subWallet.walletId === walletId
+    );
+  }
+
+  async createSubWallet(insertSubWallet: InsertSubWallet): Promise<SubWallet> {
+    const id = randomUUID();
+    const subWallet: SubWallet = {
+      ...insertSubWallet,
+      id,
+      currentAmount: "0",
+      createdAt: new Date(),
+    };
+    this.subWallets.set(id, subWallet);
+    return subWallet;
+  }
+
+  async getSubWallet(id: string): Promise<SubWallet | undefined> {
+    return this.subWallets.get(id);
+  }
+
+  async updateSubWalletBalance(subWalletId: string, amount: string): Promise<void> {
+    const subWallet = this.subWallets.get(subWalletId);
+    if (subWallet) {
+      const currentAmount = parseFloat(subWallet.currentAmount);
+      const additionalAmount = parseFloat(amount);
+      subWallet.currentAmount = (currentAmount + additionalAmount).toFixed(2);
+      
+      const wallet = this.wallets.get(subWallet.walletId);
+      if (wallet) {
+        const walletBalance = parseFloat(wallet.totalBalance);
+        wallet.totalBalance = (walletBalance + additionalAmount).toFixed(2);
+      }
+    }
+  }
+
+  async addTransaction(insertTransaction: InsertWalletTransaction): Promise<WalletTransaction> {
+    const id = randomUUID();
+    const transaction: WalletTransaction = {
+      ...insertTransaction,
+      id,
+      description: insertTransaction.description ?? null,
+      createdAt: new Date(),
+    };
+    this.transactions.set(id, transaction);
+    
+    await this.updateSubWalletBalance(transaction.subWalletId, transaction.amount);
+    
+    return transaction;
+  }
+
+  async getTransactions(subWalletId: string): Promise<WalletTransaction[]> {
+    return Array.from(this.transactions.values())
+      .filter((transaction) => transaction.subWalletId === subWalletId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
   }
 }
 
