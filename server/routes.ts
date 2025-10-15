@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "./pgStorage";
 import type { NewsArticle } from "@shared/schema";
 import { insertNewsletterSubscriberSchema, insertSubWalletSchema, insertWalletTransactionSchema } from "@shared/schema";
 import Groq from "groq-sdk";
