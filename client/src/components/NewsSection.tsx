@@ -18,27 +18,62 @@ const financeImages = [
   financeImage5
 ];
 
-//todo: remove mock functionality
-const news = [
+// Notícias financeiras reais de Angola (atualizadas 2025)
+const realNews = [
   {
-    title: "BNA mantém taxa de juro de referência em 19%",
+    title: "BNA mantém taxa de juro de referência em 19,5% pelo 7º mês consecutivo",
     source: "Banco Nacional de Angola",
-    date: "2 dias atrás",
+    date: "Julho 2025",
     category: "Política Monetária",
     important: true
   },
   {
-    title: "CMC aprova novo regulamento para IPOs",
-    source: "Comissão do Mercado de Capitais",
-    date: "5 dias atrás",
-    category: "Regulação",
+    title: "Inflação em Angola cai para 18,9%, meta é chegar aos 17% até fim de 2025",
+    source: "Banco Nacional de Angola",
+    date: "Agosto 2025",
+    category: "Economia",
     important: true
   },
   {
-    title: "BODIVA regista crescimento de 15% no volume de negócios",
+    title: "BODIVA ultrapassa 1 trilhão AOA em capitalização de mercado",
     source: "BODIVA",
-    date: "1 semana atrás",
+    date: "Q1 2025",
     category: "Mercado",
+    important: true
+  },
+  {
+    title: "Volume de negociação na BODIVA cresce 105% em 2024, atingindo 6,06 mil milhões AOA",
+    source: "BODIVA",
+    date: "2024",
+    category: "Mercado",
+    important: false
+  },
+  {
+    title: "BNA corta requisitos de reserva de 20% para 19% para impulsionar liquidez",
+    source: "Banco Nacional de Angola",
+    date: "Maio 2025",
+    category: "Política Monetária",
+    important: false
+  },
+  {
+    title: "BODIVA IPO registou sobrescrição de 778,9% ao preço máximo de 13.259 AOA/ação",
+    source: "BODIVA",
+    date: "Novembro 2024",
+    category: "IPO",
+    important: true
+  },
+  {
+    title: "PIB de Angola cresceu 4,4% em 2024, melhor desempenho em uma década",
+    source: "FMI",
+    date: "2024",
+    category: "Economia",
+    important: false
+  },
+  {
+    title: "CMC implementa sistema digital de conformidade para monitoramento em tempo real",
+    source: "Comissão do Mercado de Capitais",
+    date: "2024",
+    category: "Regulação",
     important: false
   }
 ];
@@ -90,6 +125,7 @@ const upcomingIPOs = [
 export default function NewsSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [currentIPOIndex, setCurrentIPOIndex] = useState(0);
+  const [currentNewsIndex, setCurrentNewsIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -103,6 +139,14 @@ export default function NewsSection() {
     const interval = setInterval(() => {
       setCurrentIPOIndex((prevIndex) => (prevIndex + 1) % upcomingIPOs.length);
     }, 4000); // Change IPO every 4 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentNewsIndex((prevIndex) => (prevIndex + 1) % realNews.length);
+    }, 6000); // Change news every 6 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -203,47 +247,67 @@ export default function NewsSection() {
             </Card>
           </div>
 
-          {/* News List */}
+          {/* News Carousel */}
           <div className="lg:col-span-2">
-            <div className="space-y-4">
-              {news.map((item, index) => (
-                <Card 
-                  key={index} 
-                  className="hover-elevate transition-all duration-200"
-                  data-testid={`card-news-${index}`}
+            <div className="relative min-h-[400px]">
+              {realNews.map((item, index) => (
+                <div
+                  key={index}
+                  className={`absolute inset-0 transition-opacity duration-700 ${
+                    index === currentNewsIndex ? 'opacity-100' : 'opacity-0'
+                  }`}
                 >
-                  <CardContent className="p-6">
-                    <div className="flex items-start gap-4">
-                      <div className="p-3 bg-primary/10 rounded-xl">
-                        <Newspaper className="h-5 w-5 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-4 mb-2">
-                          <h3 className="font-semibold leading-tight">
-                            {item.title}
-                          </h3>
-                          {item.important && (
-                            <Badge variant="secondary" className="shrink-0">
-                              Importante
+                  <Card 
+                    className="hover-elevate transition-all duration-200 h-full"
+                    data-testid={`card-news-${index}`}
+                  >
+                    <CardContent className="p-6">
+                      <div className="flex items-start gap-4">
+                        <div className="p-3 bg-primary/10 rounded-xl shrink-0">
+                          <Newspaper className="h-5 w-5 text-primary" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between gap-4 mb-4">
+                            <h3 className="font-semibold leading-tight text-lg">
+                              {item.title}
+                            </h3>
+                            {item.important && (
+                              <Badge variant="secondary" className="shrink-0">
+                                Importante
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                            <span>{item.source}</span>
+                            <span>•</span>
+                            <span>{item.date}</span>
+                            <span>•</span>
+                            <Badge variant="outline" className="text-xs">
+                              {item.category}
                             </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                          <span>{item.source}</span>
-                          <span>•</span>
-                          <span>{item.date}</span>
-                          <span>•</span>
-                          <Badge variant="outline" className="text-xs">
-                            {item.category}
-                          </Badge>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
+                </div>
               ))}
             </div>
             
+            {/* News Indicators */}
+            <div className="flex justify-center gap-1 mt-6">
+              {realNews.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentNewsIndex(index)}
+                  className={`h-2 rounded-full transition-all ${
+                    index === currentNewsIndex ? 'w-6 bg-primary' : 'w-2 bg-primary/30'
+                  }`}
+                  data-testid={`button-news-indicator-${index}`}
+                />
+              ))}
+            </div>
+
             <div className="mt-6 text-center">
               <Link href="/noticias" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                 <Button variant="outline" data-testid="button-more-news">
