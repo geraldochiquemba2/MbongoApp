@@ -80,12 +80,23 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
+      <div 
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: 'url(https://static.wixstatic.com/media/715819_f80074f703fa4cffbf48528869e7d8b1~mv2.jpeg/v1/fill/w_1000,h_563,al_c,q_85,usm_0.66_1.00_0.01/715819_f80074f703fa4cffbf48528869e7d8b1~mv2.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        <div className="absolute inset-0 bg-black/60" />
+      </div>
+      <div className="w-full max-w-md relative z-10">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
-          className="mb-4"
+          className="mb-4 bg-background/80 backdrop-blur-sm"
           asChild
           data-testid="button-back"
         >
