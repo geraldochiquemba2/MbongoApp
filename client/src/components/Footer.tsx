@@ -12,9 +12,9 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-12 pb-8 border-b">
           <div className="max-w-2xl mx-auto text-center">
-            <h3 className="font-heading text-2xl font-semibold mb-2">Receba Oportunidades de Investimento</h3>
+            <h3 className="font-heading text-2xl font-semibold mb-2">Receba Informações sobre Investimentos</h3>
             <p className="text-muted-foreground mb-6">
-              Inscreva-se para receber por email notificações sobre novas oportunidades de investimento no mercado angolano.
+              Coloque seu email para receber informações sobre o mercado angolano e a plataforma +Mbongo.
             </p>
             <div className="flex justify-center">
               <NewsletterForm />

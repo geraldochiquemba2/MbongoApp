@@ -263,26 +263,20 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
       
       const existingSubscriber = await storage.getNewsletterSubscriber(validatedData.email);
       
-      if (existingSubscriber) {
-        if (existingSubscriber.active === 1) {
-          return res.status(400).json({ message: "Este email já está inscrito na newsletter" });
-        } else {
-          await storage.reactivateNewsletterSubscriber(validatedData.email);
-          await sendWelcomeEmail(validatedData.email);
-          return res.json({ message: "Inscrição reativada com sucesso!" });
-        }
+      if (!existingSubscriber) {
+        await storage.subscribeNewsletter(validatedData);
+      } else if (existingSubscriber.active === 0) {
+        await storage.reactivateNewsletterSubscriber(validatedData.email);
       }
-      
-      const subscriber = await storage.subscribeNewsletter(validatedData);
       
       await sendWelcomeEmail(validatedData.email);
       
-      res.status(201).json({ message: "Inscrição realizada com sucesso!", subscriber });
+      res.status(200).json({ message: "Informações enviadas com sucesso!" });
     } catch (error) {
       if (error instanceof Error) {
         return res.status(400).json({ message: error.message });
       }
-      res.status(500).json({ message: "Erro ao processar inscrição" });
+      res.status(500).json({ message: "Erro ao enviar informações" });
     }
   });
 

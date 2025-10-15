@@ -16,14 +16,14 @@ export default function NewsletterForm() {
     },
     onSuccess: () => {
       toast({
-        title: "Inscrição realizada!",
-        description: "Você receberá atualizações sobre oportunidades de investimento.",
+        title: "Email enviado!",
+        description: "Verifique sua caixa de entrada para receber as informações sobre investimentos.",
       });
       setEmail("");
     },
     onError: (error: any) => {
       toast({
-        title: "Erro na inscrição",
+        title: "Erro ao enviar",
         description: error.message || "Tente novamente mais tarde.",
         variant: "destructive",
       });
@@ -78,10 +78,10 @@ export default function NewsletterForm() {
         {subscribeMutation.isPending ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="ml-2">A inscrever...</span>
+            <span className="ml-2">Enviando...</span>
           </>
         ) : (
-          "Inscrever"
+          "Receber Informações"
         )}
       </Button>
     </form>
