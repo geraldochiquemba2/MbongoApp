@@ -179,7 +179,10 @@ export default function RiskQuiz() {
             <Button onClick={resetQuiz} variant="outline" className="flex-1" data-testid="button-restart-quiz">
               Refazer Teste
             </Button>
-            <Button onClick={() => setLocation("/onde-comprar")} className="flex-1" data-testid="button-view-products">
+            <Button onClick={() => {
+              setLocation("/onde-comprar");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }} className="flex-1" data-testid="button-view-products">
               Ver Produtos
             </Button>
           </div>
