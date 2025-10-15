@@ -42,6 +42,16 @@ export default function NewsletterForm() {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast({
+        title: "Email inválido",
+        description: "Por favor, insira um email válido.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     subscribeMutation.mutate(email);
   };
 
@@ -56,6 +66,7 @@ export default function NewsletterForm() {
           onChange={(e) => setEmail(e.target.value)}
           disabled={subscribeMutation.isPending}
           className="pl-10"
+          required
           data-testid="input-newsletter-email"
         />
       </div>
