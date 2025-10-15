@@ -42,7 +42,15 @@ const profiles = {
     color: "text-chart-2",
     bgColor: "bg-chart-2/10",
     description: "Você prefere segurança e estabilidade. Recomendamos Títulos do Tesouro (BT/OT) com taxas fixas.",
-    products: ["Bilhetes do Tesouro", "Obrigações do Tesouro de curto prazo"]
+    products: ["Bilhetes do Tesouro (BT)", "Obrigações do Tesouro de curto prazo (OT)", "Fundos de renda fixa"],
+    tips: [
+      "Priorize Títulos do Tesouro com prazos curtos (até 2 anos)",
+      "Mantenha uma reserva de emergência equivalente a 6 meses de despesas",
+      "Diversifique entre BT e OT para equilibrar liquidez e rentabilidade",
+      "Reinvista os juros recebidos para potencializar ganhos"
+    ],
+    strategy: "Alocação sugerida: 80% Títulos do Tesouro, 15% Fundos de Renda Fixa, 5% Reserva de Emergência",
+    warning: "Mesmo investimentos conservadores têm risco. Verifique sempre as taxas e prazos antes de investir."
   },
   moderate: {
     title: "Perfil Moderado",
@@ -50,7 +58,15 @@ const profiles = {
     color: "text-primary",
     bgColor: "bg-primary/10",
     description: "Você equilibra risco e retorno. Recomendamos uma carteira mista de títulos e ações estáveis.",
-    products: ["Títulos do Tesouro", "Ações de empresas consolidadas", "Fundos diversificados"]
+    products: ["Títulos do Tesouro", "Ações de empresas consolidadas na BODIVA", "Fundos diversificados", "Obrigações corporativas"],
+    tips: [
+      "Combine investimentos de renda fixa (60%) com renda variável (40%)",
+      "Escolha ações de empresas com histórico sólido e dividendos regulares",
+      "Rebalanceie sua carteira a cada 6 meses",
+      "Acompanhe as notícias do mercado angolano regularmente"
+    ],
+    strategy: "Alocação sugerida: 50% Títulos do Tesouro, 30% Ações Blue Chips, 15% Fundos, 5% Liquidez",
+    warning: "Ações podem oscilar. Mantenha investimentos de longo prazo (mínimo 3 anos) para reduzir riscos."
   },
   aggressive: {
     title: "Perfil Arrojado",
@@ -58,7 +74,16 @@ const profiles = {
     color: "text-chart-3",
     bgColor: "bg-chart-3/10",
     description: "Você busca crescimento máximo e aceita volatilidade. Recomendamos ações e IPOs.",
-    products: ["Ações de crescimento", "IPOs", "Fundos de ações"]
+    products: ["Ações de crescimento na BODIVA", "IPOs (Ofertas Públicas Iniciais)", "Fundos de ações", "Ações de setores emergentes"],
+    tips: [
+      "Estude profundamente as empresas antes de investir",
+      "Acompanhe IPOs e ofertas secundárias no mercado angolano",
+      "Defina stop loss (limite de perda) para cada investimento",
+      "Aproveite oportunidades de compra quando o mercado cai",
+      "Mantenha pelo menos 20% em ativos líquidos para emergências"
+    ],
+    strategy: "Alocação sugerida: 60% Ações, 20% IPOs/Novos Listados, 10% Fundos Agressivos, 10% Liquidez",
+    warning: "Alto risco = alta volatilidade. Invista apenas valores que pode manter por 5+ anos e estar preparado para perdas temporárias."
   }
 };
 
@@ -125,7 +150,30 @@ export default function RiskQuiz() {
               ))}
             </ul>
           </div>
-          <div className="flex gap-3">
+
+          <div className="bg-primary/5 rounded-lg p-4 border border-primary/20">
+            <h4 className="font-semibold mb-3 text-primary">Dicas Importantes:</h4>
+            <ul className="space-y-2">
+              {profile.tips.map((tip, index) => (
+                <li key={index} className="flex items-start gap-2 text-sm">
+                  <div className="h-1.5 w-1.5 rounded-full bg-primary mt-1.5 flex-shrink-0"></div>
+                  <span className="text-muted-foreground">{tip}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-muted rounded-lg p-4">
+            <h4 className="font-semibold mb-2">Estratégia de Alocação:</h4>
+            <p className="text-sm text-muted-foreground">{profile.strategy}</p>
+          </div>
+
+          <div className="bg-destructive/10 rounded-lg p-4 border border-destructive/20">
+            <h4 className="font-semibold mb-2 text-destructive">⚠️ Atenção:</h4>
+            <p className="text-sm text-muted-foreground">{profile.warning}</p>
+          </div>
+
+          <div className="flex gap-3 pt-2">
             <Button onClick={resetQuiz} variant="outline" className="flex-1" data-testid="button-restart-quiz">
               Refazer Teste
             </Button>
