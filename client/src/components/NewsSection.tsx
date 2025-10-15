@@ -249,7 +249,7 @@ export default function NewsSection() {
 
           {/* News Carousel */}
           <div className="lg:col-span-2">
-            <div className="relative min-h-[400px]">
+            <div className="relative min-h-[180px]">
               {realNews.map((item, index) => (
                 <div
                   key={index}
