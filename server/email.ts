@@ -1,14 +1,15 @@
-import { Resend } from 'resend';
+import * as brevo from '@getbrevo/brevo';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const apiInstance = new brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY || '');
 
 export async function sendWelcomeEmail(email: string) {
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'Mbongo <onboarding@resend.dev>',
-      to: [email],
-      subject: 'Bem-vindo à +Mbongo - Seu guia no mercado de investimentos',
-      html: `
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.sender = { name: 'Mbongo', email: 'noreply@sendinblue.com' };
+    sendSmtpEmail.to = [{ email: email }];
+    sendSmtpEmail.subject = 'Bem-vindo à +Mbongo - Seu guia no mercado de investimentos';
+    sendSmtpEmail.htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h1 style="color: #2563eb; font-size: 24px; margin-bottom: 20px;">
             Bem-vindo à +Mbongo! 🎯
@@ -82,18 +83,13 @@ export async function sendWelcomeEmail(email: string) {
             © 2024 +Mbongo - Plataforma Educativa de Investimentos em Angola
           </p>
         </div>
-      `,
-    });
+      `;
 
-    if (error) {
-      console.error('Error sending welcome email:', error);
-      return { success: false, error };
-    }
-
-    console.log('Welcome email sent successfully:', data);
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log('Welcome email sent successfully via Brevo:', data);
     return { success: true, data };
   } catch (error) {
-    console.error('Error sending welcome email:', error);
+    console.error('Error sending welcome email via Brevo:', error);
     return { success: false, error };
   }
 }
@@ -109,11 +105,11 @@ export async function sendInvestmentOpportunityEmail(
   }
 ) {
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'Mbongo Oportunidades <onboarding@resend.dev>',
-      to: subscribers,
-      subject: `Nova Oportunidade: ${opportunity.title}`,
-      html: `
+    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    sendSmtpEmail.sender = { name: 'Mbongo Oportunidades', email: 'noreply@sendinblue.com' };
+    sendSmtpEmail.to = subscribers.map(email => ({ email }));
+    sendSmtpEmail.subject = `Nova Oportunidade: ${opportunity.title}`;
+    sendSmtpEmail.htmlContent = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h1 style="color: #2563eb; font-size: 24px; margin-bottom: 20px;">
             Nova Oportunidade de Investimento
@@ -154,18 +150,13 @@ export async function sendInvestmentOpportunityEmail(
             © 2024 Mbongo - Plataforma Educativa de Investimentos
           </p>
         </div>
-      `,
-    });
+      `;
 
-    if (error) {
-      console.error('Error sending investment opportunity email:', error);
-      return { success: false, error };
-    }
-
-    console.log('Investment opportunity email sent successfully:', data);
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
+    console.log('Investment opportunity email sent successfully via Brevo:', data);
     return { success: true, data };
   } catch (error) {
-    console.error('Error sending investment opportunity email:', error);
+    console.error('Error sending investment opportunity email via Brevo:', error);
     return { success: false, error };
   }
 }

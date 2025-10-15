@@ -97,13 +97,14 @@ The architecture supports future expansion with the `registerRoutes` pattern.
 - PlayAI TTS for text-to-speech synthesis (voice: Calum-PlayAI)
 - API key managed through environment variable `GROQ_API_KEY`
 
-**Email Services**: Integrated with Resend for transactional emails:
+**Email Services**: Integrated with Brevo (formerly Sendinblue) for transactional emails:
 - Newsletter subscription welcome emails
 - Investment opportunity notifications to subscribers
 - Professional HTML email templates with Mbongo branding
-- API key managed through environment variable `RESEND_API_KEY`
-- Uses `onboarding@resend.dev` as sender (test domain) or custom verified domain
+- API key managed through environment variable `BREVO_API_KEY`
+- Uses `noreply@sendinblue.com` as sender (free tier)
 - Support for batch email sending to multiple subscribers
+- Free tier: 300 emails/day without domain verification required
 
 **News Integration (Planned)**: Documentation exists for integrating external news APIs including:
 - NewsAPI for general financial news filtering by Angola/Portuguese content
@@ -174,7 +175,7 @@ Current implementation uses mock data that mirrors real Angolan financial news, 
 **Environment Variables Required**:
 - `NODE_ENV=production`
 - `GROQ_API_KEY` - For AI chat and TTS features
-- `RESEND_API_KEY` - For email notifications (newsletter welcome and opportunities)
+- `BREVO_API_KEY` - For email notifications (newsletter welcome and opportunities)
 - `PORT` - Auto-configured by Render (default 10000)
 - `RENDER_EXTERNAL_URL` - Auto-provided by Render for keep-alive
 
@@ -196,9 +197,7 @@ Current implementation uses mock data that mirrors real Angolan financial news, 
 - Investment opportunity email with customizable title, description, type, return rate, and link
 - Professional HTML emails with Mbongo branding and responsive design
 
-**Integration Note**: Resend connector integration was dismissed by user. Using manual API key configuration stored in secrets instead. Future sessions should consider using the Resend connector (connector:ccfg_resend_01K69QKYK789WN202XSE3QS17V) for automatic key rotation and management.
-
-**Important Email Limitation**: Resend in test mode (without verified domain) only sends emails to the account owner's email (geraldochiquemba@gmail.com). To send emails to all users, you MUST verify a custom domain at resend.com/domains and update the `from` address in server/email.ts to use that domain.
+**Integration Note**: Using Brevo (ex-Sendinblue) for email sending with manual API key configuration stored in secrets. Brevo free tier allows 300 emails/day without domain verification, making it ideal for development and small-scale production use.
 
 **Free Tier Limits**:
 - 750 hours/month (sufficient for 24/7 with keep-alive)
