@@ -54,7 +54,7 @@ export default function Footer() {
             <Link href="/" onClick={scrollToTop} className="hover:text-primary transition-colors" data-testid="link-privacidade">Privacidade</Link>
             <Link href="/" onClick={scrollToTop} className="hover:text-primary transition-colors" data-testid="link-termos">Termos</Link>
             <a 
-              href="https://bodiva.ao" 
+              href="https://www.bodiva.ao" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
