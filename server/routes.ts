@@ -267,7 +267,7 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
         if (existingSubscriber.active === 1) {
           return res.status(400).json({ message: "Este email já está inscrito na newsletter" });
         } else {
-          existingSubscriber.active = 1;
+          await storage.reactivateNewsletterSubscriber(validatedData.email);
           await sendWelcomeEmail(validatedData.email);
           return res.json({ message: "Inscrição reativada com sucesso!" });
         }

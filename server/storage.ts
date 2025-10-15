@@ -13,6 +13,7 @@ export interface IStorage {
   getNewsletterSubscriber(email: string): Promise<NewsletterSubscriber | undefined>;
   getAllNewsletterSubscribers(): Promise<NewsletterSubscriber[]>;
   unsubscribeNewsletter(email: string): Promise<boolean>;
+  reactivateNewsletterSubscriber(email: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
@@ -65,6 +66,15 @@ export class MemStorage implements IStorage {
     const subscriber = this.newsletterSubscribers.get(email);
     if (subscriber) {
       subscriber.active = 0;
+      return true;
+    }
+    return false;
+  }
+
+  async reactivateNewsletterSubscriber(email: string): Promise<boolean> {
+    const subscriber = this.newsletterSubscribers.get(email);
+    if (subscriber) {
+      subscriber.active = 1;
       return true;
     }
     return false;
