@@ -7,52 +7,79 @@ export async function sendWelcomeEmail(email: string) {
     const { data, error } = await resend.emails.send({
       from: 'Mbongo <onboarding@resend.dev>',
       to: [email],
-      subject: 'Bem-vindo à Newsletter Mbongo',
+      subject: 'Bem-vindo à +Mbongo - Seu guia no mercado de investimentos',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h1 style="color: #2563eb; font-size: 24px; margin-bottom: 20px;">
-            Bem-vindo à Newsletter Mbongo!
+            Bem-vindo à +Mbongo! 🎯
           </h1>
           
           <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-            Obrigado por se inscrever na nossa newsletter!
+            Obrigado por se juntar à nossa comunidade de investidores! A partir de agora, você terá acesso a informações exclusivas sobre o mercado angolano.
           </p>
-          
-          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin-bottom: 15px;">
-            A partir de agora, você receberá atualizações exclusivas sobre:
-          </p>
-          
-          <ul style="color: #374151; font-size: 16px; line-height: 1.8; margin-bottom: 20px;">
-            <li>Novas oportunidades de investimento no mercado angolano</li>
-            <li>Ofertas de Títulos do Tesouro com melhores taxas</li>
-            <li>IPOs e novas ações na BODIVA</li>
-            <li>Análises e notícias do mercado financeiro</li>
-            <li>Dicas educacionais sobre investimentos</li>
-          </ul>
+
+          <div style="background-color: #f0f9ff; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <h2 style="color: #0369a1; font-size: 18px; margin-bottom: 12px;">
+              📊 Sobre o Mercado Angolano
+            </h2>
+            <p style="color: #374151; font-size: 15px; line-height: 1.6; margin-bottom: 10px;">
+              O mercado financeiro angolano está em constante crescimento, oferecendo diversas oportunidades:
+            </p>
+            <ul style="color: #374151; font-size: 15px; line-height: 1.7; margin: 0;">
+              <li><strong>Títulos do Tesouro:</strong> Investimentos seguros com taxas competitivas</li>
+              <li><strong>BODIVA:</strong> Bolsa de valores com empresas angolanas promissoras</li>
+              <li><strong>IPOs:</strong> Oportunidades de entrar em empresas desde o início</li>
+            </ul>
+          </div>
+
+          <div style="background-color: #fef3c7; border-radius: 8px; padding: 20px; margin: 20px 0;">
+            <h2 style="color: #92400e; font-size: 18px; margin-bottom: 12px;">
+              💡 O que é a +Mbongo?
+            </h2>
+            <p style="color: #374151; font-size: 15px; line-height: 1.6; margin: 0;">
+              A <strong>+Mbongo</strong> é a sua plataforma educativa sobre investimentos em Angola. Oferecemos:
+            </p>
+            <ul style="color: #374151; font-size: 15px; line-height: 1.7; margin-top: 10px;">
+              <li>📚 Conteúdo educativo sobre como investir</li>
+              <li>🧮 Simuladores para planejar seus investimentos</li>
+              <li>📈 Análises do mercado e oportunidades atuais</li>
+              <li>🏦 Guias de onde e como comprar ativos financeiros</li>
+            </ul>
+          </div>
           
           <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 15px; margin: 20px 0;">
             <p style="color: #1e40af; font-size: 14px; margin: 0;">
-              <strong>Dica:</strong> Visite nossa plataforma para aprender mais sobre investimentos, 
-              simular cenários e descobrir onde comprar seus primeiros ativos.
+              <strong>💼 Próximos passos:</strong> Explore nossa plataforma para aprender sobre investimentos, 
+              simular cenários e descobrir as melhores oportunidades no mercado angolano!
             </p>
           </div>
           
+          <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 20px 0;">
+            <strong>Você receberá atualizações sobre:</strong>
+          </p>
+          <ul style="color: #374151; font-size: 15px; line-height: 1.8; margin-bottom: 20px;">
+            <li>✉️ Novas oportunidades de investimento</li>
+            <li>📊 Análises e tendências do mercado</li>
+            <li>📰 Notícias importantes do setor financeiro</li>
+            <li>🎓 Dicas e educação financeira</li>
+          </ul>
+          
           <a href="https://mbongo.replit.app" 
              style="display: inline-block; background-color: #2563eb; color: white; 
-                    padding: 12px 24px; text-decoration: none; border-radius: 6px; 
-                    font-size: 16px; margin-top: 10px;">
-            Visitar Plataforma Mbongo
+                    padding: 14px 28px; text-decoration: none; border-radius: 6px; 
+                    font-size: 16px; font-weight: bold; margin: 20px 0;">
+            Explorar Plataforma +Mbongo
           </a>
           
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 30px 0;">
           
           <p style="color: #6b7280; font-size: 12px; line-height: 1.4;">
-            Você está recebendo este email porque se inscreveu na newsletter da Mbongo.<br>
+            Você está recebendo este email porque se inscreveu na newsletter da +Mbongo.<br>
             Se não deseja mais receber nossas atualizações, entre em contato conosco.
           </p>
           
           <p style="color: #9ca3af; font-size: 12px; margin-top: 10px;">
-            © 2024 Mbongo - Plataforma Educativa de Investimentos
+            © 2024 +Mbongo - Plataforma Educativa de Investimentos em Angola
           </p>
         </div>
       `,
