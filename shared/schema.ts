@@ -5,13 +5,19 @@ import { z } from "zod";
 
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
+  name: text("name").notNull(),
+  phone: text("phone").notNull().unique(),
   password: text("password").notNull(),
+  createdAt: timestamp("created_at").notNull().default(sql`now()`),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const insertUserSchema = createInsertSchema(users).omit({
+  id: true,
+  createdAt: true,
+}).extend({
+  phone: z.string().regex(/^[0-9]{9}$/, "Número de telefone deve ter 9 dígitos"),
+  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+  name: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
