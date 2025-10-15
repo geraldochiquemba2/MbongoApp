@@ -92,6 +92,18 @@ export default function AIAssistant() {
     return null;
   };
 
+  const cleanTextForSpeech = (text: string): string => {
+    return text
+      .replace(/\*\*/g, '')
+      .replace(/\*/g, '')
+      .replace(/#+\s/g, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/`([^`]+)`/g, '$1')
+      .replace(/_{1,2}/g, '')
+      .replace(/~{1,2}/g, '')
+      .trim();
+  };
+
   const handlePlayAudio = (text: string, index: number) => {
     if (playingIndex === index) {
       window.speechSynthesis.cancel();
@@ -111,7 +123,8 @@ export default function AIAssistant() {
     const loadVoicesAndSpeak = () => {
       window.speechSynthesis.cancel();
 
-      const utterance = new SpeechSynthesisUtterance(text);
+      const cleanedText = cleanTextForSpeech(text);
+      const utterance = new SpeechSynthesisUtterance(cleanedText);
       utterance.lang = 'pt-BR';
       utterance.rate = 1.0;
       utterance.pitch = 1.0;
