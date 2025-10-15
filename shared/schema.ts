@@ -92,6 +92,8 @@ export const insertSubWalletSchema = createInsertSchema(subWallets).omit({
   id: true,
   createdAt: true,
   currentAmount: true,
+}).extend({
+  targetDate: z.coerce.date(),
 });
 
 export type InsertSubWallet = z.infer<typeof insertSubWalletSchema>;

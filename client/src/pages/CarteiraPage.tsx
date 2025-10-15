@@ -22,7 +22,7 @@ import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import type { Wallet as WalletType, SubWallet } from "@shared/schema";
-import backgroundImage from "@assets/pexels-eberhardgross-2086361_1760557682629.jpg";
+import backgroundImage from "@assets/stock_images/financial_market_tra_22cc0dc1.jpg";
 
 const createSubWalletSchema = z.object({
   name: z.string().min(3, "Nome deve ter no mínimo 3 caracteres"),

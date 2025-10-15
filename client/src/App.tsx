@@ -7,6 +7,7 @@ import Home from "@/pages/Home";
 import LearnPage from "@/pages/LearnPage";
 import SimulatePage from "@/pages/SimulatePage";
 import OndeComprarPage from "@/pages/OndeComprarPage";
+import CarteiraPage from "@/pages/CarteiraPage";
 import NoticiasPage from "@/pages/NoticiasPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "@/pages/not-found";
@@ -18,6 +19,7 @@ function Router() {
       <Route path="/aprender" component={LearnPage} />
       <Route path="/simular" component={SimulatePage} />
       <Route path="/onde-comprar" component={OndeComprarPage} />
+      <Route path="/carteira" component={CarteiraPage} />
       <Route path="/noticias" component={NoticiasPage} />
       <Route path="/entrar" component={AuthPage} />
       <Route component={NotFound} />
