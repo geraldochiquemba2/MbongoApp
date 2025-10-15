@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import type { NewsArticle } from "@shared/schema";
-import { insertNewsletterSubscriberSchema } from "@shared/schema";
+import { insertNewsletterSubscriberSchema, insertSubWalletSchema, insertWalletTransactionSchema } from "@shared/schema";
 import Groq from "groq-sdk";
 import { sendWelcomeEmail, sendInvestmentOpportunityEmail } from "./email";
 import { setupAuth } from "./auth";
@@ -375,6 +375,105 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
         message: "Erro ao enviar oportunidade",
         error: errorMessage
       });
+    }
+  });
+
+  // Wallet endpoints
+  app.get("/api/wallet", async (req, res) => {
+    try {
+      if (!req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ message: "Não autenticado" });
+      }
+
+      const wallet = await storage.getOrCreateWallet(req.user.id);
+      const subWallets = await storage.getSubWallets(wallet.id);
+      
+      res.json({ wallet, subWallets });
+    } catch (error) {
+      console.error("Error fetching wallet:", error);
+      res.status(500).json({ message: "Erro ao buscar carteira" });
+    }
+  });
+
+  app.post("/api/wallet/subwallets", async (req, res) => {
+    try {
+      if (!req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ message: "Não autenticado" });
+      }
+
+      const wallet = await storage.getOrCreateWallet(req.user.id);
+      
+      const validatedData = insertSubWalletSchema.parse({
+        ...req.body,
+        walletId: wallet.id
+      });
+      
+      const subWallet = await storage.createSubWallet(validatedData);
+      
+      res.status(201).json(subWallet);
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message });
+      }
+      console.error("Error creating sub-wallet:", error);
+      res.status(500).json({ message: "Erro ao criar subcarteira" });
+    }
+  });
+
+  app.post("/api/wallet/transactions", async (req, res) => {
+    try {
+      if (!req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ message: "Não autenticado" });
+      }
+
+      const validatedData = insertWalletTransactionSchema.parse(req.body);
+      
+      const subWallet = await storage.getSubWallet(validatedData.subWalletId);
+      if (!subWallet) {
+        return res.status(404).json({ message: "Subcarteira não encontrada" });
+      }
+      
+      const wallet = await storage.getWallet(req.user.id);
+      if (!wallet || wallet.id !== subWallet.walletId) {
+        return res.status(403).json({ message: "Acesso negado" });
+      }
+      
+      const transaction = await storage.addTransaction(validatedData);
+      
+      res.status(201).json(transaction);
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message });
+      }
+      console.error("Error adding transaction:", error);
+      res.status(500).json({ message: "Erro ao adicionar transação" });
+    }
+  });
+
+  app.get("/api/wallet/subwallets/:id/transactions", async (req, res) => {
+    try {
+      if (!req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ message: "Não autenticado" });
+      }
+
+      const { id } = req.params;
+      
+      const subWallet = await storage.getSubWallet(id);
+      if (!subWallet) {
+        return res.status(404).json({ message: "Subcarteira não encontrada" });
+      }
+      
+      const wallet = await storage.getWallet(req.user.id);
+      if (!wallet || wallet.id !== subWallet.walletId) {
+        return res.status(403).json({ message: "Acesso negado" });
+      }
+      
+      const transactions = await storage.getTransactions(id);
+      
+      res.json(transactions);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      res.status(500).json({ message: "Erro ao buscar transações" });
     }
   });
 
