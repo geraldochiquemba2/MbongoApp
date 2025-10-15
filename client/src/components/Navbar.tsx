@@ -1,12 +1,17 @@
 import { Link, useLocation } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useUser } from "@/hooks/useUser";
+import { useToast } from "@/hooks/use-toast";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import logoPath from "@assets/Group 4_1760481692280.png";
 
 export default function Navbar() {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, logout } = useUser();
+  const { toast } = useToast();
 
   const navItems = [
     { path: "/", label: "Início" },
@@ -19,6 +24,23 @@ export default function Navbar() {
   const handleNavClick = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  async function handleLogout() {
+    try {
+      await logout();
+      toast({
+        title: "Sessão encerrada",
+        description: "Você saiu da sua conta com sucesso.",
+      });
+      navigate("/");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Erro ao sair",
+        description: "Não foi possível encerrar a sessão.",
+      });
+    }
+  }
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b">
@@ -43,6 +65,32 @@ export default function Navbar() {
                 {item.label}
               </Link>
             ))}
+          </div>
+
+          {/* User Menu - Desktop */}
+          <div className="hidden md:flex items-center gap-2">
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="default" data-testid="button-user-menu">
+                    <User className="h-4 w-4 mr-2" />
+                    {user.name}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Minha Conta</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} data-testid="button-logout">
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button asChild data-testid="button-login">
+                <Link href="/entrar" onClick={handleNavClick}>Entrar</Link>
+              </Button>
+            )}
           </div>
 
           
@@ -79,6 +127,44 @@ export default function Navbar() {
               </Link>
             ))}
             
+            {/* User Menu - Mobile */}
+            <div className="pt-3 border-t space-y-2">
+              {user ? (
+                <>
+                  <div className="px-3 py-2 text-sm text-muted-foreground">
+                    {user.name}
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start"
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    data-testid="button-mobile-logout"
+                  >
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sair
+                  </Button>
+                </>
+              ) : (
+                <Button
+                  className="w-full"
+                  asChild
+                  data-testid="button-mobile-login"
+                >
+                  <Link
+                    href="/entrar"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      handleNavClick();
+                    }}
+                  >
+                    Entrar
+                  </Link>
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </div>
