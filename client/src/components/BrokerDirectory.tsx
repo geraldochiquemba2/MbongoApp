@@ -81,7 +81,7 @@ const brokers = [
     phone: "+244 222 397 700",
     email: "geral@bca.ao",
     address: "Luanda, Maianga",
-    url: "https://www.bca.ao"
+    url: "https://www.bancobca.ao"
   }
 ];
 
