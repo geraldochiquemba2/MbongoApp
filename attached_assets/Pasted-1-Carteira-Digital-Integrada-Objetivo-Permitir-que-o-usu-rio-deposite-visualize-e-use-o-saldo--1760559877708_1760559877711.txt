@@ -1,0 +1,124 @@
+1. Carteira Digital Integrada
+🎯 Objetivo
+
+Permitir que o usuário deposite, visualize e use o saldo dentro da plataforma — seja para investir, comprar ativos ou atingir metas gamificadas.
+
+⚙️ Funcionalidades
+
+Saldo em tempo real: Exibe o valor disponível, ganhos, perdas e histórico.
+
+Botões principais:
+
+➕ Depositar
+
+🔁 Transferir
+
+💸 Sacar
+
+🧾 Histórico de transações
+
+Integração com contas bancárias e métodos locais de pagamento (como Multicaixa Express, etc.)
+
+Notificações automáticas:
+
+“Depósito confirmado 🎉”
+
+“Parabéns! Você atingiu 50% da sua meta de investimento 🚀”
+
+💡 UX/UI ideias
+
+Tela tipo “Carteira Digital” → estilo cartão virtual 3D, mostrando:
+
+Saldo total
+
+Progresso de investimentos
+
+Animação leve ao adicionar saldo (moedas subindo, por exemplo)
+
+Uso de cores verdes e azuis para transmitir confiança e crescimento financeiro.
+
+Microinterações:
+
+Vibração leve e som sutil ao depositar.
+
+Confete ou moeda caindo quando o saldo aumenta.
+
+🎓 2. Aba “Educação Financeira” / “Aprenda a Investir”
+🎯 Objetivo
+
+Ensinar o usuário a investir com confiança, de forma simples e gamificada.
+
+📚 Estrutura sugerida
+
+Módulos curtos e interativos:
+
+Introdução à Bolsa de Valores 📈
+
+Como funciona o risco e o retorno 🎯
+
+Estratégias de poupança 💰
+
+Como usar a carteira da plataforma para investir ⚙️
+
+Quiz após cada módulo → ao acertar perguntas, o usuário ganha pontos ou “Badges” (medalhas virtuais).
+
+🧠 Gamificação
+
+Sistema de níveis de conhecimento:
+
+Nível 1: Aprendiz
+
+Nível 2: Explorador
+
+Nível 3: Investidor Sábio
+
+Pontuação XP: cada lição concluída dá XP, que desbloqueia novos conteúdos ou benefícios (ex: menor taxa em transações).
+
+💡 UI/UX
+
+Interface estilo “curso rápido”, com cards visuais, vídeos curtos, e ícones ilustrados.
+
+Exemplo de microcopy:
+
+“💡 Dica do dia: Diversifique seus investimentos como quem tempera a comida — um pouco de cada sabor!”
+
+🎮 3. Ferramenta Gamificada de Economia e Investimento
+🎯 Objetivo
+
+Motivar o usuário a definir metas financeiras e investir de forma divertida e consistente.
+
+💰 Mecânica sugerida
+
+O usuário define uma meta (ex: “Comprar um computador” ou “Investir em ações”).
+
+Define:
+
+Valor total 💸
+
+Prazo ⏱️
+
+Frequência de depósito (diário, semanal, mensal)
+
+A plataforma mostra uma barra de progresso animada 🟩 e envia lembretes motivacionais.
+
+🕹️ Gamificação
+
+Metas com recompensas:
+
+Ao atingir 25%, 50%, 75%, o app mostra mensagens e animações de progresso.
+
+Desafios semanais:
+
+“Economize 1000kz esta semana e ganhe +50 XP!”
+
+Leaderboard (ranking):
+
+Mostrar os usuários que mais economizaram ou concluíram metas.
+
+💡 UI/UX
+
+Tela tipo “Missão Financeira”
+
+Cada meta parece uma fase de jogo (com ícone, progresso, e recompensa).
+
+Uso de personagem ou mascote digital que acompanha o progresso (“Mentor financeiro virtual”).
