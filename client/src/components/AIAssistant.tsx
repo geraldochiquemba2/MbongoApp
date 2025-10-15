@@ -26,6 +26,7 @@ export default function AIAssistant() {
   const [playingIndex, setPlayingIndex] = useState<number | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const manualStopRef = useRef(false);
   const { toast } = useToast();
 
   const chatMutation = useMutation({
@@ -35,9 +36,9 @@ export default function AIAssistant() {
     },
     onSuccess: (data) => {
       setMessages((prev) => {
-        const newMessages = [
+        const newMessages: Message[] = [
           ...prev,
-          { role: "assistant", content: data.reply },
+          { role: "assistant" as const, content: data.reply },
         ];
         
         // Reproduzir áudio automaticamente
@@ -116,6 +117,7 @@ export default function AIAssistant() {
 
   const handlePlayAudio = (text: string, index: number) => {
     if (playingIndex === index) {
+      manualStopRef.current = true;
       window.speechSynthesis.cancel();
       setPlayingIndex(null);
       return;
@@ -131,6 +133,7 @@ export default function AIAssistant() {
     }
 
     const loadVoicesAndSpeak = () => {
+      manualStopRef.current = false;
       window.speechSynthesis.cancel();
 
       const cleanedText = cleanTextForSpeech(text);
@@ -147,16 +150,22 @@ export default function AIAssistant() {
       utterance.onend = () => {
         setPlayingIndex(null);
         utteranceRef.current = null;
+        manualStopRef.current = false;
       };
 
       utterance.onerror = () => {
         setPlayingIndex(null);
         utteranceRef.current = null;
-        toast({
-          title: "Erro ao reproduzir áudio",
-          description: "Não foi possível reproduzir o áudio.",
-          variant: "destructive",
-        });
+        
+        // Só mostra erro se não foi um stop manual
+        if (!manualStopRef.current) {
+          toast({
+            title: "Erro ao reproduzir áudio",
+            description: "Não foi possível reproduzir o áudio.",
+            variant: "destructive",
+          });
+        }
+        manualStopRef.current = false;
       };
 
       utteranceRef.current = utterance;
