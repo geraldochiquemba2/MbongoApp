@@ -126,3 +126,45 @@ Current implementation uses mock data that mirrors real Angolan financial news, 
 - Custom query function that handles 401 responses based on context
 - Disabled automatic refetching by default (staleTime: Infinity)
 - Specific components opt-in to refetch intervals (e.g., news every 5 minutes)
+
+## Deployment & Production
+
+### Render Deployment Configuration
+
+**Platform**: Configured for deployment on Render.com free tier with keep-alive functionality.
+
+**Deployment Files**:
+- `render.yaml` - Infrastructure as code configuration for Render
+- `DEPLOY_RENDER.md` - Complete deployment guide in Portuguese
+
+**Build & Start**:
+- Build command: `npm install && npm run build`
+- Start command: `npm start`
+- Production build outputs to `/dist` directory
+
+**Health Monitoring**:
+- Health check endpoint: `GET /api/health`
+- Returns status, timestamp, and uptime information
+- Used for monitoring and keep-alive pings
+
+**Keep-Alive System** (prevents free tier sleep after 15 minutes):
+1. **Internal Keep-Alive**: node-cron scheduled job pings `/api/health` every 10 minutes
+   - Only runs in production when `NODE_ENV=production` and `RENDER_SERVICE_NAME` is set
+   - Uses `RENDER_EXTERNAL_URL` environment variable for self-ping
+   - Logs ping success/failure for monitoring
+
+2. **External Monitoring** (recommended): UptimeRobot or Cron-Job.org
+   - Provides redundancy if internal system fails
+   - Offers uptime monitoring and alerting
+   - Configured to ping health endpoint every 5-10 minutes
+
+**Environment Variables Required**:
+- `NODE_ENV=production`
+- `GROQ_API_KEY` - For AI chat and TTS features
+- `PORT` - Auto-configured by Render (default 10000)
+- `RENDER_EXTERNAL_URL` - Auto-provided by Render for keep-alive
+
+**Free Tier Limits**:
+- 750 hours/month (sufficient for 24/7 with keep-alive)
+- 100 GB bandwidth/month
+- Cold start ~30-60 seconds when waking from sleep
