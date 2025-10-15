@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import type { NewsArticle } from "@shared/schema";
+import { insertNewsletterSubscriberSchema } from "@shared/schema";
 import Groq from "groq-sdk";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -251,6 +252,65 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
     } catch (error) {
       console.error("Error with Groq TTS:", error);
       res.status(500).json({ message: "Erro ao gerar áudio" });
+    }
+  });
+
+  // Newsletter subscription endpoint
+  app.post("/api/newsletter/subscribe", async (req, res) => {
+    try {
+      const validatedData = insertNewsletterSubscriberSchema.parse(req.body);
+      
+      const existingSubscriber = await storage.getNewsletterSubscriber(validatedData.email);
+      
+      if (existingSubscriber) {
+        if (existingSubscriber.active === 1) {
+          return res.status(400).json({ message: "Este email já está inscrito na newsletter" });
+        } else {
+          existingSubscriber.active = 1;
+          return res.json({ message: "Inscrição reativada com sucesso!" });
+        }
+      }
+      
+      const subscriber = await storage.subscribeNewsletter(validatedData);
+      res.status(201).json({ message: "Inscrição realizada com sucesso!", subscriber });
+    } catch (error) {
+      if (error instanceof Error) {
+        return res.status(400).json({ message: error.message });
+      }
+      res.status(500).json({ message: "Erro ao processar inscrição" });
+    }
+  });
+
+  // Get all newsletter subscribers (admin endpoint)
+  app.get("/api/newsletter/subscribers", async (req, res) => {
+    try {
+      const subscribers = await storage.getAllNewsletterSubscribers();
+      res.json(subscribers);
+    } catch (error) {
+      console.error("Error fetching subscribers:", error);
+      res.status(500).json({ message: "Erro ao buscar assinantes" });
+    }
+  });
+
+  // Newsletter unsubscribe endpoint
+  app.post("/api/newsletter/unsubscribe", async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: "Email é obrigatório" });
+      }
+      
+      const success = await storage.unsubscribeNewsletter(email);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Email não encontrado" });
+      }
+      
+      res.json({ message: "Inscrição cancelada com sucesso" });
+    } catch (error) {
+      console.error("Error unsubscribing:", error);
+      res.status(500).json({ message: "Erro ao cancelar inscrição" });
     }
   });
 

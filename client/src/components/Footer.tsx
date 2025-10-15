@@ -1,5 +1,6 @@
 import { Link } from "wouter";
 import logoPath from "@assets/Group 4_1760483541444.png";
+import NewsletterForm from "./NewsletterForm";
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -9,6 +10,18 @@ export default function Footer() {
   return (
     <footer className="bg-accent/30 border-t">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="mb-12 pb-8 border-b">
+          <div className="max-w-2xl mx-auto text-center">
+            <h3 className="font-heading text-2xl font-semibold mb-2">Receba Oportunidades de Investimento</h3>
+            <p className="text-muted-foreground mb-6">
+              Inscreva-se para receber por email notificações sobre novas oportunidades de investimento no mercado angolano.
+            </p>
+            <div className="flex justify-center">
+              <NewsletterForm />
+            </div>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div>
             <img src={logoPath} alt="Mbongo" className="h-8 mb-4" />
