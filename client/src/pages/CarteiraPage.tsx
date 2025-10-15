@@ -53,10 +53,7 @@ export default function CarteiraPage() {
 
   const createSubWalletMutation = useMutation({
     mutationFn: async (values: z.infer<typeof createSubWalletSchema>) => {
-      return await apiRequest("/api/wallet/subwallets", {
-        method: "POST",
-        body: JSON.stringify(values),
-      });
+      return await apiRequest("POST", "/api/wallet/subwallets", values);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/wallet"] });
@@ -78,12 +75,9 @@ export default function CarteiraPage() {
 
   const addTransactionMutation = useMutation({
     mutationFn: async (values: z.infer<typeof addTransactionSchema>) => {
-      return await apiRequest("/api/wallet/transactions", {
-        method: "POST",
-        body: JSON.stringify({
-          ...values,
-          type: "deposit",
-        }),
+      return await apiRequest("POST", "/api/wallet/transactions", {
+        ...values,
+        type: "deposit",
       });
     },
     onSuccess: () => {

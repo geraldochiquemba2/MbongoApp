@@ -18,6 +18,7 @@ export default function Navbar() {
     { path: "/aprender", label: "Aprender" },
     { path: "/simular", label: "Simular" },
     { path: "/onde-comprar", label: "Onde Comprar" },
+    { path: "/carteira", label: "Carteira" },
     { path: "/noticias", label: "Notícias" },
   ];
 
