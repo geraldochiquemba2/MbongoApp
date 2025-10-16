@@ -46,16 +46,19 @@ The architecture supports future expansion with the `registerRoutes` pattern.
 
 **Development Environment**: Custom Vite integration in development mode with HMR (Hot Module Replacement) through middleware mode. Replit-specific plugins provide runtime error overlays and development banners.
 
-**Data Layer Pattern**: Abstract storage interface (`IStorage`) currently implemented with in-memory storage (`MemStorage`). Designed to be swapped with database-backed implementations without changing business logic.
+**Data Layer Pattern**: Abstract storage interface (`IStorage`) implemented with PostgreSQL storage (`PgStorage`). Uses Neon serverless PostgreSQL for all data persistence including user authentication, wallets, and newsletter subscriptions.
 
 ### Database & ORM
 
 **ORM**: Drizzle ORM configured for PostgreSQL with schema-first approach. Schema definitions use Drizzle's type-safe table builders and integrate with Zod for runtime validation.
 
-**Database Provider**: Configured for Neon serverless PostgreSQL (@neondatabase/serverless driver). Connection string expected via `DATABASE_URL` environment variable.
+**Database Provider**: Configured for Neon serverless PostgreSQL (@neondatabase/serverless driver). Connection string expected via `DATABASE_URL` environment variable. WebSocket support configured using the `ws` package to enable Neon serverless connections in Node.js environment.
 
 **Schema Design**: 
-- Users table with UUID primary keys, username/password authentication fields
+- Users table with UUID primary keys, phone/password authentication fields
+- Wallets table with user relationship and total balance tracking
+- Sub-wallets table for investment goals with target amounts and dates
+- Wallet transactions table for deposit/withdrawal history
 - News articles table with rich metadata (title, description, content, source, category, publication date, image URL, importance flag)
 - Newsletter subscribers table with email, subscription date, and active status
 - Uses `createInsertSchema` from drizzle-zod for type-safe insert operations
@@ -84,9 +87,19 @@ The architecture supports future expansion with the `registerRoutes` pattern.
 
 **Build Strategy**: Separate build processes for client (Vite) and server (esbuild). Client builds to `/dist/public`, server bundles to `/dist`. Production serves static files from built client and runs bundled server.
 
-**Session Management**: Infrastructure present for session-based authentication using connect-pg-simple for PostgreSQL-backed sessions, though not actively implemented in current routes.
+**Session Management**: Session-based authentication using Passport.js with phone/password authentication. Sessions stored in memory (MemoryStore) for development. Production should use PostgreSQL-backed sessions with connect-pg-simple.
 
 **Educational vs Transactional**: Architectural decision to remain an educational/informational platform rather than executing actual trades. Connects users to authorized intermediaries (banks/brokers) for actual transactions.
+
+## Development Setup
+
+**Test User**: For development and testing purposes, a test user is available:
+- Nome: Geraldo Abreu  
+- Telefone: 923456789
+- Senha: 123456
+- Carteira inicial: 50.000,00 Kz
+
+This user can be created via the registration endpoint and persists in the PostgreSQL database.
 
 ## External Dependencies
 
@@ -191,7 +204,7 @@ Current implementation uses mock data that mirrors real Angolan financial news, 
 - Welcome email sent automatically on subscription using Resend
 - Admin endpoint to send investment opportunity emails to all subscribers
 - Unsubscribe functionality
-- In-memory storage (subscribers are lost on server restart - migrate to PostgreSQL for production)
+- PostgreSQL storage (data persists across server restarts)
 
 **Email Templates**:
 - Welcome email with platform introduction and investment categories
