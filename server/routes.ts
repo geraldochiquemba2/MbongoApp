@@ -477,6 +477,92 @@ Não dê conselhos financeiros específicos ou recomendações de compra/venda. 
     }
   });
 
+  // Investment recommendations endpoint - generates personalized recommendations based on balance
+  app.post("/api/wallet/recommendations", async (req, res) => {
+    try {
+      if (!req.isAuthenticated() || !req.user) {
+        return res.status(401).json({ message: "Não autenticado" });
+      }
+
+      const { balance } = req.body;
+
+      if (!balance || isNaN(parseFloat(balance))) {
+        return res.status(400).json({ message: "Saldo inválido" });
+      }
+
+      if (!process.env.GROQ_API_KEY) {
+        return res.status(500).json({ message: "Chave de API do Groq não configurada" });
+      }
+
+      const groq = new Groq({
+        apiKey: process.env.GROQ_API_KEY
+      });
+
+      const balanceFormatted = parseFloat(balance).toLocaleString("pt-AO", {
+        style: "currency",
+        currency: "AOA",
+      });
+
+      const systemPrompt = `Você é um consultor financeiro especializado no mercado angolano. Com base no saldo disponível do usuário, forneça recomendações específicas e práticas de investimento.
+
+IMPORTANTE: Suas recomendações devem ser baseadas no contexto real do mercado angolano:
+- Títulos do Tesouro (BT/OT) com taxas de 12-15% ao ano
+- Ações na BODIVA (Bolsa de Dívida e Valores de Angola)
+- Fundos de investimento disponíveis em Angola
+- Depósitos a prazo em bancos angolanos
+- Investimentos em moeda estrangeira (USD)
+
+Estruture sua resposta em 3 seções claras:
+
+1. CURTO PRAZO (3-12 meses):
+   - Opções de baixo risco
+   - Liquidez elevada
+   - Retornos esperados
+   
+2. MÉDIO/LONGO PRAZO (1-5 anos):
+   - Opções de crescimento
+   - Diversificação
+   - Rentabilidade esperada
+   
+3. ONDE APLICAR:
+   - Instituições específicas (bancos, corretoras)
+   - Plataformas disponíveis
+   - Próximos passos práticos
+
+Mantenha a resposta:
+- Clara e objetiva
+- Com valores específicos em AOA
+- Focada em opções realmente disponíveis em Angola
+- Máximo 400 palavras
+- Em português de Angola`;
+
+      const userPrompt = `Tenho ${balanceFormatted} disponíveis para investir. Com base neste valor, que opções de investimento me recomenda no mercado angolano? Preciso de sugestões práticas tanto para curto prazo quanto para médio/longo prazo, e quero saber exatamente onde posso aplicar este dinheiro.`;
+
+      const chatCompletion = await groq.chat.completions.create({
+        messages: [
+          {
+            role: "system",
+            content: systemPrompt
+          },
+          {
+            role: "user",
+            content: userPrompt
+          }
+        ],
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.7,
+        max_tokens: 1500,
+      });
+
+      const recommendations = chatCompletion.choices[0]?.message?.content || "Não foi possível gerar recomendações no momento.";
+
+      res.json({ recommendations });
+    } catch (error) {
+      console.error("Error generating recommendations:", error);
+      res.status(500).json({ message: "Erro ao gerar recomendações" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Wallet, TrendingUp, Plus, ArrowUpRight, Target, Calendar, DollarSign } from "lucide-react";
+import { Wallet, TrendingUp, Plus, ArrowUpRight, Target, Calendar, DollarSign, Lightbulb, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
@@ -45,6 +45,8 @@ export default function CarteiraPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [depositDialogOpen, setDepositDialogOpen] = useState(false);
   const [selectedSubWallet, setSelectedSubWallet] = useState<SubWallet | null>(null);
+  const [recommendations, setRecommendations] = useState<string | null>(null);
+  const [showRecommendations, setShowRecommendations] = useState(false);
 
   const { data, isLoading } = useQuery<{ wallet: WalletType; subWallets: SubWallet[] }>({
     queryKey: ["/api/wallet"],
@@ -94,6 +96,24 @@ export default function CarteiraPage() {
       toast({
         variant: "destructive",
         title: "Erro ao adicionar depósito",
+        description: error.message,
+      });
+    },
+  });
+
+  const recommendationsMutation = useMutation({
+    mutationFn: async (balance: string) => {
+      const res = await apiRequest("POST", "/api/wallet/recommendations", { balance });
+      return await res.json();
+    },
+    onSuccess: (data) => {
+      setRecommendations(data.recommendations);
+      setShowRecommendations(true);
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Erro ao gerar recomendações",
         description: error.message,
       });
     },
@@ -224,6 +244,68 @@ export default function CarteiraPage() {
                 </CardHeader>
               </Card>
             </div>
+
+            {wallet && parseFloat(wallet.totalBalance) > 0 && (
+              <div className="mb-8">
+                <Card className="bg-white/5 backdrop-blur-sm border-white/10">
+                  <CardHeader>
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="p-2 bg-yellow-500/20 rounded-lg">
+                        <Lightbulb className="h-5 w-5 text-yellow-500" />
+                      </div>
+                      <CardTitle className="text-white">Recomendações de Investimento</CardTitle>
+                    </div>
+                    <CardDescription className="text-white/70">
+                      Descubra onde aplicar os seus {parseFloat(wallet.totalBalance).toLocaleString("pt-AO", {
+                        style: "currency",
+                        currency: "AOA",
+                      })} com base em opções de curto e longo prazo
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {!showRecommendations ? (
+                      <Button 
+                        onClick={() => recommendationsMutation.mutate(wallet.totalBalance)} 
+                        disabled={recommendationsMutation.isPending}
+                        className="w-full"
+                        data-testid="button-get-recommendations"
+                      >
+                        {recommendationsMutation.isPending ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Gerando recomendações...
+                          </>
+                        ) : (
+                          <>
+                            <Lightbulb className="h-4 w-4 mr-2" />
+                            Obter Recomendações Personalizadas
+                          </>
+                        )}
+                      </Button>
+                    ) : (
+                      <div className="space-y-4">
+                        <div className="prose prose-invert max-w-none">
+                          <div className="text-white/90 whitespace-pre-wrap text-sm leading-relaxed">
+                            {recommendations}
+                          </div>
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          onClick={() => {
+                            setShowRecommendations(false);
+                            setRecommendations(null);
+                          }}
+                          className="w-full"
+                          data-testid="button-hide-recommendations"
+                        >
+                          Ocultar Recomendações
+                        </Button>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            )}
 
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-heading font-bold text-white">
